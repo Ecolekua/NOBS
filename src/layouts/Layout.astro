@@ -1,0 +1,50 @@
+---
+// src/layouts/Layout.astro
+import { ClientRouter } from 'astro:transitions'; // <- ¡Cambiamos a ClientRouter!
+import '../styles/base.css'; 
+---
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Fuentes de Adobe -->
+    <link rel="stylesheet" href="https://use.typekit.net/upd0woi.css" />
+    
+    <!-- Habilitamos el enrutador del cliente (antes ViewTransitions) -->
+    <ClientRouter />
+
+    <script is:inline>
+      document.documentElement.className = 'js';
+    </script>
+  </head>
+  <body class="demo-1">
+    <!-- Capa de la transición -->
+    <div class="revealer"></div>
+
+    <div class="el pos-1" data-alt-pos="pos-3" data-scramble-duration="0">No Brand Studio.</div>
+    <div class="el pos-1 typing-indicator" data-alt-pos="pos-3" data-scramble-duration="0">█</div>
+
+    
+       
+    <slot />
+
+   <!-- Lógica de GSAP para la animación inicial adaptada a Astro -->
+    <script>
+      import { gsap } from 'gsap';
+      
+      document.addEventListener('astro:page-load', () => {
+        // Aseguramos que el origen sea arriba y la escala inicial 1
+        gsap.set(".revealer", { transformOrigin: "top center", scaleY: 1 }); 
+        
+        // Ejecutamos la animación
+        gsap.to(".revealer", {
+          scaleY: 0,
+          duration: 1.25,
+          delay: 0.1, 
+          ease: "power4.inOut", // Usamos un ease nativo, a prueba de fallos
+        });
+      });
+    </script>
+  </body>
+</html>
