@@ -6,34 +6,39 @@ import Preloader from '../components/Preloader.astro';
 
 <Layout title="Intro - No Brand Studio">
   
-  <style>
+  <style is:global>
     body { background-color: var(--color-bg); }
     .fade-out-layer {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background-color: var(--color-bg); z-index: 9999;
       opacity: 0; pointer-events: none;
     }
+
+    /* EL ESCUDO: Si el body tiene la clase 'is-intro', ocultamos el logo original del Layout */
+    body.is-intro .logo.fixed span {
+      display: none !important;
+    }
+    /* Y forzamos a que SOLO se vea nuestro contador */
+    body.is-intro .logo.fixed span#loading-counter {
+      display: inline-block !important;
+    }
   </style>
 
   <div class="fade-out-layer" id="fade-layer"></div>
 
-  <!-- 1. VOLVEMOS A PONER TUS IMÁGENES DE FONDO AQUÍ -->
+  <!-- NUESTRO CONTADOR MINIMALISTA -->
   <div class="logo fixed">
-    <span class="dif">No Brand Studio.</span>
+    <span class="dif" id="loading-counter" style="min-width: 4ch;">0%</span>
   </div>
-  <div class="image-sequence-fixed fixed image-thumbnail-wrapper logo">
+
+  <div class="image-sequence-fixed fixed logo">
     <img id="scroll-image" src="/images/apple.webp" alt="Secuencia" />
   </div>
 
   <div id="smooth-wrapper">
     <main id="smooth-content">
-      
       <Preloader /> 
-      
-      <!-- 2. EL SECRETO: Un bloque invisible gigante que reemplaza el espacio 
-           que antes ocupaban tus clientes. Esto le da a GSAP la "pista" para hacer scroll -->
       <div style="height: 250vh; width: 100%;"></div>
-
     </main>
   </div>
 
@@ -41,24 +46,26 @@ import Preloader from '../components/Preloader.astro';
     import "../scripts/main.js";
   </script>
 
-  <!-- 3. SCRIPT BLINDADO DE REDIRECCIÓN -->
   <script is:inline>
     document.addEventListener('astro:page-load', () => {
-      if (window.location.pathname !== '/') return;
-
-      // Bloqueamos la interacción sin romper el scroll
-      document.body.style.pointerEvents = "none";
+      // 1. ACTIVAMOS EL ESCUDO SOLO EN LA INTRO (Ruta '/')
+      if (window.location.pathname === '/') {
+        document.body.classList.add('is-intro');
+        document.body.style.pointerEvents = "none";
+      } else {
+        // Si por alguna razón el usuario ya está en otra página, apagamos el escudo
+        document.body.classList.remove('is-intro');
+        return;
+      }
 
       setTimeout(() => {
         const gsap = window.gsap || window['gsap'];
         
-        // PLAN B: Si ocurre un error catastrófico y GSAP no carga, redirigimos al instante
         if (!gsap) {
           window.location.href = "/home";
           return;
         }
 
-        // Calculamos la nueva altura con nuestro espaciador
         let maxScroll = 0;
         if (window.miSmoother) {
             maxScroll = window.miSmoother.content().offsetHeight - window.innerHeight;
@@ -66,31 +73,44 @@ import Preloader from '../components/Preloader.astro';
             maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         }
 
-        // Si la página es muy corta por error, forzamos un mínimo de scroll matemático
         if (maxScroll < 500) maxScroll = 2500;
 
-        // Le decimos al motor que baje hasta el fondo
         const targetObj = window.miSmoother ? window.miSmoother : window;
         const scrollProp = window.miSmoother ? "scrollTop" : "scrollTo";
+        const duration = 5.5; 
+
+        const counterElement = document.getElementById("loading-counter");
+        const counterObj = { value: 0 };
+
+        if (counterElement) {
+          gsap.to(counterObj, {
+            value: 100, 
+            duration: duration, 
+            ease: "power2.inOut", 
+            onUpdate: function() {
+              counterElement.innerText = Math.round(counterObj.value) + "%";
+            }
+          });
+        }
 
         gsap.to(targetObj, {
           [scrollProp]: maxScroll,
-          duration: 3,
+          duration: duration,
           ease: "power2.inOut",
           onComplete: () => {
-            // Se funde a negro al terminar
             gsap.to("#fade-layer", {
               opacity: 1,
-              duration: 0.3,
+              duration: 0.4,
               ease: "power2.inOut",
               onComplete: () => {
-                // Redirección inmaculada
+                // 2. APAGAMOS EL ESCUDO JUSTO ANTES DE IR A /HOME
+                document.body.classList.remove('is-intro');
                 window.location.href = "/home";
               }
             });
           }
         });
-      }, 1000); // 1 segundo de respiro antes de iniciar
+      }, 300); 
     });
   </script>
 

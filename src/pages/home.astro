@@ -8,7 +8,9 @@ import Layout from '../layouts/Layout.astro';
   <header class="frame">
   
   </header>
-
+<div class="logo fixed">
+      <span class="dif">No Brand Studio.</span>
+    </div>
   <!-- ==========================================
        1. TU CÓDIGO DECORATIVO DE FONDO AQUÍ
        ========================================== -->
@@ -35,9 +37,7 @@ import Layout from '../layouts/Layout.astro';
         <a href="#">#gsap</a>
       </nav>
     </div>
-    <div class="logo fixed">
-      <span class="dif">No Brand Studio.</span>
-    </div>
+    
 
     <!-- Contenedor de todos los textos animados -->
     <div class="content">
@@ -110,8 +110,8 @@ import Layout from '../layouts/Layout.astro';
       </section>
 
       <footer>
-        <p>Experiment 503</p>
-        <p>Developed by Gemini x Codrops</p>
+        <p>Experiment 626</p>
+        <p>:D</p>
       </footer>
 
     </main>
@@ -134,7 +134,7 @@ import Layout from '../layouts/Layout.astro';
     width: 100vw;
     height: 100vh;
     z-index: 0; /* Lo manda detrás de la sección de clientes */
-    opacity: 0.8; /* Súper tenue, ajusta este valor a tu gusto (ej: 0.05 para más sutil) */
+    opacity: 0.3; /* Súper tenue, ajusta este valor a tu gusto (ej: 0.05 para más sutil) */
     pointer-events: none; /* CLAVE: Evita que el usuario seleccione este texto o interfiera con los links de los clientes */
     overflow: hidden;
     display: flex;
@@ -144,7 +144,7 @@ import Layout from '../layouts/Layout.astro';
 
   /* Asegura que los textos internos no rompan el contenedor */
   .bg-decorative .content {
-    transform: scale(0.8); /* Lo encogemos un poco para que sea un buen patrón de fondo */
+    transform: scale(0.5); /* Lo encogemos un poco para que sea un buen patrón de fondo */
     width: 100%;
     height: 100%;
   }

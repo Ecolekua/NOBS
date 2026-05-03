@@ -25,7 +25,7 @@ function initAnimations() {
         }
     } catch(e) { console.error(e); }
 
-    // 2. MOTOR DE TEXTOS ANIMADOS (Para Studio, Work, etc.)
+    // 2. MOTOR DE TEXTOS ANIMADOS
     function initGlobalTextReveal() {
         try {
             const revealElements = document.querySelectorAll(".reveal-text");
@@ -107,7 +107,8 @@ function initAnimations() {
             gsap.fromTo(el, { scrambleText: { text: '', chars: '' } }, { scrambleText: { text, chars: 'upperAndLowerCase', revealDelay: r }, duration: d });
         }
         textElements.forEach((el) => ScrollTrigger.create({ trigger: el, start: 'top bottom', end: 'bottom top', onEnter: () => scramble(el), onEnterBack: () => scramble(el) }));
-        if (logoEl) scramble(logoEl, 1, 0.5);
+        // El logo principal tarda en total 1.5s en formarse (1s duración + 0.5s delay)
+        if (logoEl) scramble(logoEl, 1, 0.5); 
     }
 
     function initClientsHover() {
@@ -116,15 +117,31 @@ function initAnimations() {
         const clientImages = ['/images/apple.webp', '/images/BMW.webp', '/images/bottega.webp', '/images/microsoft.webp', '/images/prada.webp'];
         let activeClientIndex = -1;
 
-        // 1. CONFIGURACIÓN DE LA IMAGEN POR DEFECTO
         const defaultImg = document.getElementById('default-client-img');
+        const centerLogo = document.querySelector('.logo.fixed'); 
+
+        // CROSSFADE SINCORNIZADO: 3.5 segundos en total (1.5s de escritura + 2s totalmente visible)
         if (defaultImg) {
-            // Aparece suavemente DESPUÉS de que "No Brand Studio" termina de escribirse
             gsap.to(defaultImg, { 
                 opacity: 0.8, 
                 duration: 1.2, 
-                delay: 1.5, 
+                delay: 2, // NUEVO TIEMPO
                 ease: "power2.inOut" 
+            });
+        }
+
+        if (centerLogo) {
+            // Forzamos que se mantenga en 100% visible mientras espera
+            gsap.set(centerLogo, { opacity: 1 }); 
+
+            gsap.to(centerLogo, {
+                opacity: 0,
+                duration: 1.2,
+                delay: 2, // NUEVO TIEMPO
+                ease: "power2.inOut",
+                onComplete: () => {
+                    centerLogo.style.display = "none"; 
+                }
             });
         }
 
@@ -135,7 +152,6 @@ function initAnimations() {
                 if (activeClientIndex === index) return;
                 activeClientIndex = index;
 
-                // 2. OCULTAMOS LA IMAGEN POR DEFECTO AL HACER HOVER
                 if (defaultImg) {
                     gsap.to(defaultImg, { opacity: 0, duration: 0.3, overwrite: true });
                 }
@@ -157,7 +173,6 @@ function initAnimations() {
                     gsap.to(activeClientImg, { opacity: 0, duration: 0.2, onComplete: () => w.remove() });
                 }
 
-                // 3. RECUPERAMOS LA IMAGEN POR DEFECTO AL QUITAR EL MOUSE
                 if (defaultImg) {
                     gsap.to(defaultImg, { opacity: 0.8, duration: 0.5, delay: 0.1, overwrite: true });
                 }
@@ -179,6 +194,17 @@ function initAnimations() {
 document.addEventListener('astro:page-load', () => {
     const gsap = window.gsap || window['gsap'];
     if (!gsap) return;
+    
+    // ¡LA MAGIA VUELVE AQUÍ! Registramos oficialmente todos los plugins
+    gsap.registerPlugin(
+        window.ScrollTrigger, 
+        window.ScrollSmoother, 
+        window.Flip, 
+        window.CustomEase,
+        window.SplitText,
+        window.ScrambleTextPlugin
+    );
+
     ctx = gsap.context(() => { initAnimations(); });
 });
 
