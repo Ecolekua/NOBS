@@ -7,11 +7,11 @@
   </div>
   <!-- Columna 2: Enlaces -->
   <div class="col links">
-    <a href="/work" class="el reveal-text">Work</a>
     <a href="/studio" class="el reveal-text">Studio</a>
+    <a href="/work" class="el reveal-text">Work</a>
   </div>
   <!-- Columna 3: Info extra -->
-  <div class="col info reveal-text el">
+  <div class="col info el">
     <p>Santiago, Chile</p>
   </div>
 </nav>
@@ -26,14 +26,15 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
-    justify-content: center;
+    justify-content:top;
     z-index: 50;
   }
   .col {
     display: flex;
   }
   .col.links {
-    justify-content: center;
+     
+    justify-content:right;
     gap: 2rem;
   }
   .col.info {
