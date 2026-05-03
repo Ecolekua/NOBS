@@ -91,27 +91,31 @@ import Layout from '../layouts/Layout.astro';
         </div>
         
         <div class="clients-list">
-          <div class="client-name logo"><h1>Apple,</h1></div>
-          <div class="client-name logo"><h1>BMW,</h1></div>
-          <div class="client-name logo"><h1>Bottega,</h1></div>
-          <div class="client-name logo"><h1>Microsoft,</h1></div>
-          <div class="client-name logo"><h1>Prada.</h1></div>
+          <!-- Ahora son enlaces <a> que apuntan a sus respectivas páginas -->
+          <a href="/proyectos/EstudioLarco" class="client-name logo"><h1>Estudio Larco,</h1></a>
+          <a href="/proyectos/bmw" class="client-name logo"><h1>Heel,</h1></a>
+          <a href="/proyectos/bottega" class="client-name logo"><h1>Serres,</h1></a>
+          <a href="/proyectos/microsoft" class="client-name logo"><h1>Procolor,</h1></a>
+          <a href="/proyectos/prada" class="client-name logo"><h1>Labs.</h1></a>
         </div>
         
         <div class="clients-preview">
           <!-- Tu imagen por defecto -->
-          <img 
+          <video 
             id="default-client-img" 
-            src="/images/apple.webp" 
-            alt="Default Background" 
+            src="/images/EstudioLarco.mp4" 
+            autoplay 
+            loop 
+            muted 
+            playsinline
             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; pointer-events: none;"
-          />
+          ></video>
         </div> 
       </section>
 
       <footer>
         <p>Experiment 626</p>
-        <p>&nbsp; <3 &nbsp;</p>
+        <p>&nbsp;  &nbsp;</p>
       </footer>
 
     </main>

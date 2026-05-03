@@ -11,7 +11,7 @@ function initAnimations() {
 
     if (!gsap || !ScrollSmoother) return;
 
-    // 1. SMOOTHER
+    // 1. SMOOTHER (Scroll Suave)
     try {
         const wrapperEl = document.getElementById('smooth-wrapper');
         const contentEl = document.getElementById('smooth-content');
@@ -25,7 +25,7 @@ function initAnimations() {
         }
     } catch(e) { console.error(e); }
 
-    // 2. MOTOR DE TEXTOS ANIMADOS
+    // 2. MOTOR DE TEXTOS ANIMADOS (Para Studio, Work, etc.)
     function initGlobalTextReveal() {
         try {
             const revealElements = document.querySelectorAll(".reveal-text");
@@ -53,11 +53,9 @@ function initAnimations() {
     const scrollMain = document.querySelector('.content');
     const textElements = document.querySelectorAll('.el');
     const logoEl = document.querySelector('.logo > span'); 
-    const relatedEl = document.querySelector('.related');
-    const relatedItems = relatedEl?.querySelectorAll('.grid__item');
-    const imgElement = document.getElementById('scroll-image');
     const clientsPreview = document.querySelector(".clients-preview");
     const clientNames = document.querySelectorAll(".client-name");
+    const imgElement = document.getElementById('scroll-image');
 
     if (logoEl) {
         textElements.forEach((el) => { el.dataset.text = el.textContent; });
@@ -66,6 +64,7 @@ function initAnimations() {
 
     function safeRun(fn) { try { fn(); } catch(e) { console.error(e); } }
 
+    // Función de secuencia inactiva (la dejamos por si a futuro decides usar fotos estáticas)
     function initImageSequence() {
         if (!imgElement || !scrollMain) return;
         const images = ['/images/apple.webp', '/images/BMW.webp', '/images/bottega.webp', '/images/microsoft.webp', '/images/prada.webp'];
@@ -85,6 +84,7 @@ function initAnimations() {
         });
     }
 
+    // 4. ANIMACIÓN FLIP (Textos volando en distintas direcciones)
     function initFlips() {
         if (!textElements.length) return;
         textElements.forEach((el) => gsap.set(el, { clearProps: 'transform,opacity,filter' }));
@@ -100,6 +100,7 @@ function initAnimations() {
         });
     }
 
+    // 5. EFECTO SCRAMBLE (Descodificador de texto)
     function initScramble() {
         if (!window.ScrambleTextPlugin || !textElements.length) return;
         function scramble(el, d = 1, r = 0) {
@@ -107,81 +108,120 @@ function initAnimations() {
             gsap.fromTo(el, { scrambleText: { text: '', chars: '' } }, { scrambleText: { text, chars: 'upperAndLowerCase', revealDelay: r }, duration: d });
         }
         textElements.forEach((el) => ScrollTrigger.create({ trigger: el, start: 'top bottom', end: 'bottom top', onEnter: () => scramble(el), onEnterBack: () => scramble(el) }));
-        // El logo principal tarda en total 1.5s en formarse (1s duración + 0.5s delay)
         if (logoEl) scramble(logoEl, 1, 0.5); 
     }
 
+    // 6. INTERACCIÓN HOVER DE CLIENTES (Inteligente: MP4 y Fotos, Blindado para Safari/Chrome)
     function initClientsHover() {
         if (!clientsPreview || clientNames.length === 0 || !CustomEase) return;
         CustomEase.create("hop", "M0,0 C0.071,0.505 0.192,0.726 0.318,0.852 0.45,0.984 0.504,1 1,1");
-        const clientImages = ['/images/apple.webp', '/images/BMW.webp', '/images/bottega.webp', '/images/microsoft.webp', '/images/prada.webp'];
+        
+        // Define aquí los archivos de tus clientes (puedes mezclar mp4 y webp/jpg)
+        const clientMediaFiles = [
+            '/images/EstudioLarco.mp4',       
+            '/images/BMW.webp',        
+            '/images/bottega.webp',     
+            '/images/microsoft.webp',  
+            '/images/prada.webp'       
+        ];
+        
         let activeClientIndex = -1;
 
         const defaultImg = document.getElementById('default-client-img');
         const centerLogo = document.querySelector('.logo.fixed'); 
 
-        // CROSSFADE SINCORNIZADO: 3.5 segundos en total (1.5s de escritura + 2s totalmente visible)
+        // CROSSFADE INICIAL (Espera 3.5s antes de ejecutarse)
         if (defaultImg) {
-            gsap.to(defaultImg, { 
-                opacity: 0.8, 
-                duration: 1.2, 
-                delay: 2, // NUEVO TIEMPO
-                ease: "power2.inOut" 
-            });
+            gsap.to(defaultImg, { opacity: 0.8, duration: 1.2, delay: 3.5, ease: "power2.inOut" });
         }
 
         if (centerLogo) {
-            // Forzamos que se mantenga en 100% visible mientras espera
             gsap.set(centerLogo, { opacity: 1 }); 
-
             gsap.to(centerLogo, {
                 opacity: 0,
                 duration: 1.2,
-                delay: 2, // NUEVO TIEMPO
+                delay: 2,
                 ease: "power2.inOut",
-                onComplete: () => {
-                    centerLogo.style.display = "none"; 
-                }
+                onComplete: () => { centerLogo.style.display = "none"; }
             });
         }
 
         clientNames.forEach((client, index) => {
-            let activeClientImgWrapper = null, activeClientImg = null;
+            let activeMediaWrapper = null, activeMediaEl = null;
             
             client.addEventListener("mouseover", () => {
                 if (activeClientIndex === index) return;
                 activeClientIndex = index;
 
-                if (defaultImg) {
-                    gsap.to(defaultImg, { opacity: 0, duration: 0.3, overwrite: true });
+                if (defaultImg) gsap.to(defaultImg, { opacity: 0, duration: 0.3, overwrite: true });
+
+                const wrapper = document.createElement("div"); 
+                wrapper.className = "client-img-wrapper";
+                
+                const fileSrc = clientMediaFiles[index];
+                let mediaElement;
+
+                // DETECCIÓN DE VIDEO VS IMAGEN (MEJORADA Y BLINDADA)
+                if (fileSrc.toLowerCase().endsWith('.mp4')) {
+                    mediaElement = document.createElement("video");
+                    mediaElement.src = fileSrc;
+                    
+                    // 1. Los navegadores exigen que los atributos se configuren a nivel HTML puro
+                    mediaElement.setAttribute("autoplay", "");
+                    mediaElement.setAttribute("loop", "");
+                    mediaElement.setAttribute("muted", "");
+                    mediaElement.setAttribute("playsinline", "");
+                    mediaElement.muted = true; // Doble seguridad para Safari
+                    
+                    // 2. Fuerzas absolutas para que no colapse el tamaño del div vacío
+                    mediaElement.style.position = "absolute";
+                    mediaElement.style.top = "0";
+                    mediaElement.style.left = "0";
+                    mediaElement.style.width = "100%";
+                    mediaElement.style.height = "100%";
+                    mediaElement.style.objectFit = "cover";
+                } else {
+                    mediaElement = document.createElement("img"); 
+                    mediaElement.src = fileSrc;
                 }
 
-                const wrapper = document.createElement("div"); wrapper.className = "client-img-wrapper";
-                const img = document.createElement("img"); img.src = clientImages[index];
-                gsap.set(img, { scale: 1.25, opacity: 0 });
-                wrapper.appendChild(img); clientsPreview.appendChild(wrapper);
-                activeClientImgWrapper = wrapper; activeClientImg = img;
+                gsap.set(mediaElement, { scale: 1.25, opacity: 0 });
+                wrapper.appendChild(mediaElement); 
+                clientsPreview.appendChild(wrapper);
+
+                // 3. ¡EL TRUCO VITAL! Forzamos la descarga y reproducción justo después de inyectarlo en el DOM
+                if (mediaElement.tagName === "VIDEO") {
+                    mediaElement.load();
+                    const playPromise = mediaElement.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.warn("Autoplay prevenido por el navegador momentáneamente:", error);
+                        });
+                    }
+                }
+
+                activeMediaWrapper = wrapper; 
+                activeMediaEl = mediaElement;
                 
+                // Animaciones GSAP
                 gsap.to(wrapper, { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", duration: 0.3, ease: "hop" });
-                gsap.to(img, { opacity: 1, scale: 1, duration: 0.4, ease: "hop" });
+                gsap.to(mediaElement, { opacity: 1, scale: 1, duration: 0.4, ease: "hop" });
             });
             
             client.addEventListener("mouseout", () => {
                 activeClientIndex = -1;
-                if (activeClientImg && activeClientImgWrapper) {
-                    const w = activeClientImgWrapper;
-                    gsap.to(activeClientImg, { opacity: 0, duration: 0.2, onComplete: () => w.remove() });
+                if (activeMediaEl && activeMediaWrapper) {
+                    const w = activeMediaWrapper;
+                    gsap.to(activeMediaEl, { opacity: 0, duration: 0.2, onComplete: () => w.remove() });
                 }
 
-                if (defaultImg) {
-                    gsap.to(defaultImg, { opacity: 0.8, duration: 0.5, delay: 0.1, overwrite: true });
-                }
+                if (defaultImg) gsap.to(defaultImg, { opacity: 0.8, duration: 0.5, delay: 0.1, overwrite: true });
             });
         });
     }
 
-    // EJECUCIÓN 
-    safeRun(initImageSequence);
+    // EJECUCIÓN (Mantenemos la secuencia comentada para usar el Video global)
+    // safeRun(initImageSequence); 
     safeRun(initFlips);
     safeRun(initScramble);
     safeRun(initClientsHover);
@@ -191,11 +231,11 @@ function initAnimations() {
     window._homeResizeHandler = handleResize; 
 }
 
+// CONEXIÓN CON ASTRO (Aquí registramos todos los plugins para revivir el Flip)
 document.addEventListener('astro:page-load', () => {
     const gsap = window.gsap || window['gsap'];
     if (!gsap) return;
     
-    // ¡LA MAGIA VUELVE AQUÍ! Registramos oficialmente todos los plugins
     gsap.registerPlugin(
         window.ScrollTrigger, 
         window.ScrollSmoother, 
@@ -208,6 +248,7 @@ document.addEventListener('astro:page-load', () => {
     ctx = gsap.context(() => { initAnimations(); });
 });
 
+// LIMPIEZA AL CAMBIAR DE PÁGINA (Evita bugs de scroll)
 document.addEventListener('click', (e) => {
     const link = e.target.closest('a');
     if (link && link.href && link.href !== window.location.href && !link.hasAttribute('data-astro-reload')) {

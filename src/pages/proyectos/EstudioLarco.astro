@@ -1,0 +1,121 @@
+---
+// src/pages/proyectos/apple.astro
+// Nota: Fíjate que usamos "../../" porque ahora estamos en una subcarpeta
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Estudio Larco - No Brand Studio">
+  
+  <!-- ==========================================
+       CONTENEDOR OBLIGATORIO PARA GSAP
+       (Si no pones esto, el scroll se rompe)
+       ========================================== -->
+
+---
+
+<Layout>
+  <!-- ESQUELETO DE GSAP SCROLLSMOOTHER EMPAREJADO CON EL HOME -->
+  <div id="smooth-wrapper">
+    <main id="smooth-content">
+      <section class="studio">
+        <div class="col">
+          <h2 class="studio-header reveal-text">Our Story</h2>
+        </div>
+        <div class="col">
+
+
+
+            <header class="frame">
+		 <div class="el pos-1 typing-indicator" data-alt-pos="pos-3" data-scramble-duration="0">█</div>
+      <a href="/home" class="text-reveal el pos-1" data-alt-pos="pos-3" data-scramble-duration="0" data-astro-reload> ← Back to Index</a>
+          
+       
+      <h1 class="frame__title  flex-end">
+		 
+       
+        
+        <a class="nav text-reveal">Proyecto Estudio Larco.</a>
+      </h1>
+      <a class="frame__archive" href="#">All demos</a>
+       <a href="/studio" class="btn-transicion frame__archive">← Back to Index</a>
+                      
+      <a class="frame__github" href="#">GitHub</a>
+      <nav class="frame__tags">
+        <a href="#">#scroll</a>
+        <a href="#">#typography</a>
+        <a href="#">#gsap</a>
+      </nav>
+    </header>
+
+
+
+          <div class="animate-text reveal-text">
+            En No Brand Studio, entendemos que la creatividad no es solo una
+            habilidad, sino una forma de pensar. Nacimos en Chile a partir de
+            una convicción: diseñar con intención desafiando lo obvio y
+            construyendo experiencias significativas. Somos un estudio
+            multidisciplinario de diseño y tecnología, donde convergen diseño,
+            estrategia y desarrollo para dar vida a productos centrados en la
+            experiencia de usuario.
+            <br /><br />
+            Hoy, colaboramos con clientes y equipos que buscan ir más allá de lo convencional,
+            desarrollando soluciones digitales, identidades y productos que combinan
+            funcionalidad, estética y propósito.
+          </div>
+          <video 
+          src="/images/EstudioLarco.mp4"
+                   autoplay 
+            loop 
+            muted 
+            playsinline
+            style=" width: 90%; height: 50%; object-fit: cover; opacity: 1; pointer-events: none;">
+        </video>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ESTILOS ESPECÍFICOS DE LA PÁGINA STUDIO (Aislados de base.css) -->
+  <style>
+    .studio {
+      margin-top: 2rem;
+      padding: 15em 2rem;
+      display: flex;
+      gap: 1em;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+    }
+    .studio .col:nth-child(1) {
+      flex: 1;
+    }
+    .studio .col:nth-child(2) {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 2em;
+    }
+    .about-img {
+      aspect-ratio: 5/7;
+      overflow: hidden;
+    }
+    .about-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    @media (max-width: 900px) {
+      .studio {
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <!-- LÓGICA DE ANIMACIÓN (Usando el GSAP global + import local de SplitText) -->
+   <!-- LÓGICA DE ANIMACIÓN -->
+  <script>
+    import "../../scripts/main.js";
+  </script>
+</Layout>
+ 
+</Layout>
