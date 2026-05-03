@@ -1,22 +1,70 @@
 // src/scripts/main.js
+import { SplitText } from 'gsap/SplitText';
 
-let ctx; 
+let ctx; // Contexto global para limpiar la memoria entre transiciones
 
 function initAnimations() {
-    // AQUÍ MANTENEMOS TU CONFIGURACIÓN FLUIDA ORIGINAL
+    // 1. SMOOTHER GLOBAL CON ALTA FLUIDEZ
+    const wrapperEl = document.getElementById('smooth-wrapper');
+    const contentEl = document.getElementById('smooth-content');
+
+    if (!wrapperEl || !contentEl) {
+        console.warn("GSAP: Estructura #smooth-wrapper no encontrada. Animaciones omitidas.");
+        return;
+    }
+
     window.miSmoother = ScrollSmoother.create({
-        wrapper: '#smooth-wrapper',
-        content: '#smooth-content',
+        wrapper: wrapperEl,
+        content: contentEl,
         smooth: 1,
-        normalizeScroll: true // <-- Mantenemos la fluidez extrema
+        normalizeScroll: true // <-- Mantiene la fluidez extrema
     });
 
+    // 2. MOTOR GLOBAL DE TEXTOS ANIMADOS
+    function initGlobalTextReveal() {
+        const revealElements = document.querySelectorAll(".reveal-text");
+        if (revealElements.length === 0) return;
+
+        revealElements.forEach((el) => {
+            // Usamos el SplitText importado en la línea 2
+            const split = new SplitText(el, { 
+                type: "lines",
+                linesClass: "line",
+                mask: "lines"
+            });
+
+            gsap.set(split.lines, { y: "110%" });
+
+            ScrollTrigger.create({
+                trigger: el,
+                start: "top 85%", // Inicia cuando el texto entra un poco en pantalla
+                onEnter: () => {
+                    gsap.to(split.lines, {
+                        y: "0%",
+                        duration: 1.2,
+                        stagger: 0.1,
+                        ease: "power4.out",
+                        delay: 0.5
+                    });
+                }
+            });
+        });
+
+        // AÑADE ESTO: Forza a recalcular las posiciones una vez que Astro termina de pintar el DOM
+        setTimeout(() => {
+            ScrollTrigger.refresh();
+        }, 150);
+    }
+
+    initGlobalTextReveal(); // Encendemos el motor de textos
+
+    // 3. BARRERA DEL HOME (Lo siguiente SOLO se ejecuta en el Home)
     const scrollMain = document.querySelector('.content');
     if (!scrollMain) return; 
 
-    // --- REFERENCIAS Y LÓGICA DEL HOME ---
+    // --- REFERENCIAS DEL HOME ---
     const textElements = document.querySelectorAll('.el');
-    const logoEl = document.querySelector('.logo > span'); // Ajustado a tu versión
+    const logoEl = document.querySelector('.logo > span'); 
     const relatedEl = document.querySelector('.related');
     const relatedItems = relatedEl?.querySelectorAll('.grid__item');
     const imgElement = document.getElementById('scroll-image');
@@ -77,6 +125,7 @@ function initAnimations() {
         clientNames.forEach((client, index) => {
             let activeClientImgWrapper = null;
             let activeClientImg = null;
+            
             client.addEventListener("mouseover", () => {
                 if (activeClientIndex === index) return;
                 activeClientIndex = index;
@@ -84,23 +133,28 @@ function initAnimations() {
                 clientImgWrapper.className = "client-img-wrapper";
                 const clientImg = document.createElement("img");
                 clientImg.src = clientImages[index];
-                gsap.set(clientImg, { scale: 2.25, opacity: 0 });
+                
+                gsap.set(clientImg, { scale: 1.25, opacity: 0 });
                 clientImgWrapper.appendChild(clientImg);
                 clientsPreview.appendChild(clientImgWrapper);
                 activeClientImgWrapper = clientImgWrapper;
                 activeClientImg = clientImg;
+                
+                // Animación acelerada de entrada
                 gsap.to(clientImgWrapper, {
                     clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-                    duration: 0.5,
+                    duration: 0.3,
                     ease: "hop",
                 });
-                gsap.to(clientImg, { opacity: 1, scale: 1, duration: 0.6, ease: "hop" });
+                gsap.to(clientImg, { opacity: 1, scale: 1, duration: 0.4, ease: "hop" });
             });
+            
             client.addEventListener("mouseout", () => {
                 activeClientIndex = -1;
                 if (activeClientImg && activeClientImgWrapper) {
                     const wrapperToRemove = activeClientImgWrapper;
-                    gsap.to(activeClientImg, { opacity: 0, duration: 0.5, onComplete: () => wrapperToRemove.remove() });
+                    // Animación acelerada de salida
+                    gsap.to(activeClientImg, { opacity: 0, duration: 0.2, onComplete: () => wrapperToRemove.remove() });
                 }
             });
         });
@@ -138,7 +192,6 @@ function initAnimations() {
         gsap.fromTo(el, { scrambleText: { text: '', chars: '' } }, { scrambleText: { text, chars: 'upperAndLowerCase', revealDelay }, duration: duration ?? 1 });
     }
 
-    // Funcionalidad de relacionados de tu versión original
     function initRelatedDemos() {
         if (!relatedEl || !relatedItems) return;
         gsap.set(relatedItems, { xPercent: 100, scale: 0, opacity: 0 });
@@ -185,27 +238,51 @@ function initAnimations() {
 
 // --- HOOKS DE ASTRO PARA GESTIONAR EL CICLO DE VIDA ---
 document.addEventListener('astro:page-load', () => {
-    gsap.registerPlugin(ScrollTrigger, ScrollSmoother, Flip, ScrambleTextPlugin, ScrollToPlugin, CustomEase);
+    // Rescatamos variables globales para evitar errores en Astro
+    const gsap = window['gsap'];
+    const ScrollTrigger = window['ScrollTrigger'];
+    const ScrollSmoother = window['ScrollSmoother'];
+    const Flip = window['Flip'];
+    const ScrambleTextPlugin = window['ScrambleTextPlugin'];
+    const ScrollToPlugin = window['ScrollToPlugin'];
+    const CustomEase = window['CustomEase'];
+
+    if (!gsap) return;
+
+    // AÑADIMOS SplitText AQUÍ AL REGISTRO
+    gsap.registerPlugin(ScrollTrigger, ScrollSmoother, Flip, ScrambleTextPlugin, ScrollToPlugin, CustomEase, SplitText);
+    
     ctx = gsap.context(() => {
         initAnimations(); 
     });
 });
 
-// ESCUDO DE LIMPIEZA DE TRANSICIÓN (Esto te salva del congelamiento)
+// ESCUDO DE LIMPIEZA DE TRANSICIÓN (Fase de Captura)
 document.addEventListener('click', (e) => {
     const link = e.target.closest('a');
-    if (link && link.href && link.href !== window.location.href) {
+    
+    // Intervenimos si es un link interno y NO tiene data-astro-reload
+    if (link && link.href && link.href !== window.location.href && !link.hasAttribute('data-astro-reload')) {
+        const gsap = window['gsap'];
+        const ScrollTrigger = window['ScrollTrigger'];
         
-        if (window.miSmoother) {
+        // 1. Matamos al Smoother
+        if (window.miSmoother && gsap) {
             gsap.killTweensOf(window.miSmoother);
             window.miSmoother.kill();
             window.miSmoother = null;
         }
 
-        ScrollTrigger.getAll().forEach(t => t.kill());
-        ScrollTrigger.clearScrollMemory();
+        // 2. Destruimos los Triggers
+        if (ScrollTrigger) {
+            ScrollTrigger.getAll().forEach(t => t.kill());
+            ScrollTrigger.clearScrollMemory();
+        }
+        
+        // 3. Revertimos el contexto para devolver los textos Split a la normalidad
         if (ctx) ctx.revert();
 
+        // 4. Limpiamos estilos residuales en el DOM
         document.documentElement.style.overflow = '';
         document.body.style.overflow = '';
         document.documentElement.style.height = '';

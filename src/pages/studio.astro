@@ -8,10 +8,37 @@ import Layout from "../layouts/Layout.astro";
     <main id="smooth-content">
       <section class="studio">
         <div class="col">
-          <h2 class="studio-header">Our Story</h2>
+          <h2 class="studio-header reveal-text">Our Story</h2>
         </div>
         <div class="col">
-          <div class="animate-text">
+
+
+
+            <header class="frame">
+		 <div class="el pos-1 typing-indicator" data-alt-pos="pos-3" data-scramble-duration="0">█</div>
+          <a class="text-reveal el pos-1" data-alt-pos="pos-3" data-scramble-duration="0"> No Brand studio.</a>
+          
+       
+      <h1 class="frame__title  flex-end">
+		 
+       
+        
+        <a class="nav text-reveal">Chilean UX Design studio.</a>
+      </h1>
+      <a class="frame__archive" href="#">All demos</a>
+       <a href="/studio" class="btn-transicion frame__archive">Ir a Studio</a>
+                      
+      <a class="frame__github" href="#">GitHub</a>
+      <nav class="frame__tags">
+        <a href="#">#scroll</a>
+        <a href="#">#typography</a>
+        <a href="#">#gsap</a>
+      </nav>
+    </header>
+
+
+
+          <div class="animate-text reveal-text">
             En No Brand Studio, entendemos que la creatividad no es solo una
             habilidad, sino una forma de pensar. Nacimos en Chile a partir de
             una convicción: diseñar con intención desafiando lo obvio y
@@ -26,7 +53,7 @@ import Layout from "../layouts/Layout.astro";
           </div>
           <div class="about-img">
             <img
-              src="/studio.jpg"
+              src="/images/bottega.webp"
               alt="Team at work in Nuvoro's creative space"
             />
           </div>
@@ -72,36 +99,10 @@ import Layout from "../layouts/Layout.astro";
   </style>
 
   <!-- LÓGICA DE ANIMACIÓN (Usando el GSAP global + import local de SplitText) -->
+   <!-- LÓGICA DE ANIMACIÓN -->
   <script>
-    document.addEventListener("astro:page-load", () => {
-      // 1. Rescatamos las variables globales para silenciar a VS Code
-      const gsap = window["gsap"];
-      const SplitText = window["SplitText"];
-
-      if (!gsap || !SplitText) return; // Seguridad extra
-
-      gsap.registerPlugin(SplitText);
-
-      const textElements = document.querySelectorAll(
-        ".animate-text, .studio-header",
-      );
-      if (textElements.length === 0) return;
-
-      const splitText = new SplitText(textElements, {
-        type: "lines",
-        linesClass: "line",
-        mask: "lines",
-      });
-
-      gsap.set(splitText.lines, { y: "110%" });
-
-      gsap.to(splitText.lines, {
-        y: "0%",
-        duration: 1.5,
-        stagger: 0.1,
-        delay: 1.5,
-        ease: "power4.out",
-      });
-    });
+    import "../scripts/main.js";
   </script>
+</Layout>
+ 
 </Layout>
