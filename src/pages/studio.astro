@@ -1,55 +1,100 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-  <section class="studio">
-    <div class="col">
-      <h2 class="studio-header">Our Story</h2>
-    </div>
-    <div class="col">
-      <div class="animate-text">
-        En No Brand Studio, entendemos que la creatividad no es solo una habilidad, sino una forma de pensar. Nacimos en Chile a partir de una convicción: diseñar con intención, 
-        desafiando lo obvio y construyendo experiencias significativas. Somos un estudio multidisciplinario 
-        de diseño y tecnología, donde convergen diseño, estrategia y desarrollo para dar vida a productos 
-        centrados en la experiencia de usuario.
-        Hoy, colaboramos con clientes y equipos que buscan ir más allá de lo convencional,
-         desarrollando soluciones digitales, identidades y productos que combinan funcionalidad,
-          estética y propósito.
-      </div>
+  <!-- ESQUELETO DE GSAP SCROLLSMOOTHER EMPAREJADO CON EL HOME -->
+  <div id="smooth-wrapper">
+    <main id="smooth-content">
+      <section class="studio">
+        <div class="col">
+          <h2 class="studio-header">Our Story</h2>
+        </div>
+        <div class="col">
+          <div class="animate-text">
+            En No Brand Studio, entendemos que la creatividad no es solo una
+            habilidad, sino una forma de pensar. Nacimos en Chile a partir de
+            una convicción: diseñar con intención desafiando lo obvio y
+            construyendo experiencias significativas. Somos un estudio
+            multidisciplinario de diseño y tecnología, donde convergen diseño,
+            estrategia y desarrollo para dar vida a productos centrados en la
+            experiencia de usuario.
+            <br /><br />
+            Hoy, colaboramos con clientes y equipos que buscan ir más allá de lo convencional,
+            desarrollando soluciones digitales, identidades y productos que combinan
+            funcionalidad, estética y propósito.
+          </div>
+          <div class="about-img">
+            <img
+              src="/studio.jpg"
+              alt="Team at work in Nuvoro's creative space"
+            />
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
 
-      <div class="about-img">
-        <img
-          src="/studio.jpg"
-          alt="Team at work in Nuvoro's creative space"
-        />
-      </div>
-    </div>
-  </section>
+  <!-- ESTILOS ESPECÍFICOS DE LA PÁGINA STUDIO (Aislados de base.css) -->
+  <style>
+    .studio {
+      margin-top: 2rem;
+      padding: 15em 2rem;
+      display: flex;
+      gap: 1em;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+    }
+    .studio .col:nth-child(1) {
+      flex: 1;
+    }
+    .studio .col:nth-child(2) {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 2em;
+    }
+    .about-img {
+      aspect-ratio: 5/7;
+      overflow: hidden;
+    }
+    .about-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    @media (max-width: 900px) {
+      .studio {
+        flex-direction: column;
+      }
+    }
+  </style>
 
+  <!-- LÓGICA DE ANIMACIÓN (Usando el GSAP global + import local de SplitText) -->
   <script>
-    import { gsap } from 'gsap';
-    import { SplitText } from 'gsap/SplitText';
+    document.addEventListener("astro:page-load", () => {
+      // 1. Rescatamos las variables globales para silenciar a VS Code
+      const gsap = window["gsap"];
+      const SplitText = window["SplitText"];
 
-    gsap.registerPlugin(SplitText);
+      if (!gsap || !SplitText) return; // Seguridad extra
 
-    document.addEventListener('astro:page-load', () => {
-      
-      const textElements = document.querySelectorAll(".animate-text, .studio-header");
+      gsap.registerPlugin(SplitText);
+
+      const textElements = document.querySelectorAll(
+        ".animate-text, .studio-header",
+      );
       if (textElements.length === 0) return;
 
-      // 1. Instanciamos SplitText usando la propiedad 'mask'
-      // Esto crea automáticamente los divs envolventes con overflow: hidden
       const splitText = new SplitText(textElements, {
         type: "lines",
         linesClass: "line",
-        mask: "lines" // ¡La magia ocurre aquí!
+        mask: "lines",
       });
 
-      // 2. Posición inicial (oculto hacia abajo, por debajo de la máscara)
       gsap.set(splitText.lines, { y: "110%" });
 
-      // 3. Animación hacia arriba
       gsap.to(splitText.lines, {
         y: "0%",
         duration: 1.5,
@@ -59,44 +104,4 @@ import Layout from '../layouts/Layout.astro';
       });
     });
   </script>
-
-  <style>
-    /* Agrega aquí los estilos específicos de la página Studio */
-    .studio {
-      padding: 15em 1em;
-      display: flex;
-      gap: 1em;
-      background-color: #fff;
-      color: #0a0a0a;
-      min-height: 100vh;
-    }
-
-    .studio .col:nth-child(1) {
-      flex: 1;
-    }
-
-    .studio .col:nth-child(2) {
-      flex: 2;
-      display: flex;
-      flex-direction: column;
-      gap: 2em;
-    }
-
-    .about-img {
-      aspect-ratio: 5/7;
-      overflow: hidden;
-    }
-
-    .about-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    @media (max-width: 900px) {
-      .studio {
-        flex-direction: column;
-      }
-    }
-  </style>
 </Layout>

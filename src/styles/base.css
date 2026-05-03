@@ -1,16 +1,14 @@
-*,
-*::after,
-*::before {
+*, *::after, *::before {
   box-sizing: border-box;
 }
 
 :root {
   font-size: 13px;
-  --color-text: #3C3A41;
-  --color-bg:#EAE4D9;
-  --color-link: #d85b35e7;
-  --color-link-hover: #D73534;
-  --page-padding: 1.5rem;
+  --color-text: #3d3c40;
+  --color-bg: #ebe9e5;
+  --color-link: #D73534;
+  --color-link-hover: #d85b35e7;
+  --page-padding: 2rem;
 }
 
 body {
@@ -20,128 +18,42 @@ body {
   font-family: 'forma-djr-mono', monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-transform: uppercase;
 }
 
-a {
+/* --- ESTILOS GLOBALES DE INTERACCIÓN --- */
+a, button {
+  text-transform: uppercase;
   text-decoration: none;
   color: var(--color-link);
   outline: none;
   cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-    color: var(--color-link-hover);
-  }
-
-  &:focus {
-    outline: none;
-    background: lightgrey;
-
-    &:not(:focus-visible) {
-      background: transparent;
-    }
-
-    &:focus-visible {
-      outline: 2px solid red;
-      background: transparent;
-    }
-  }
 }
 
-.frame {
-  padding: 1rem var(--page-padding) 0;
-  display: grid;
-  z-index: 1000;
-  position: relative;
-  grid-row-gap: 1rem;
-  grid-column-gap: 1.5rem;
-  pointer-events: none;
-  justify-items: start;
-  grid-template-columns: auto auto auto 1fr;
-  grid-template-areas:
-    'title title title'
-    'archive github ...'
-    'tags tags tags'
-    'sponsor sponsor sponsor';
-
-  #cdawrap {
-    justify-self: start;
-    grid-area: sponsor;
-  }
-
-  a,
-  button {
-    pointer-events: auto;
-  }
-
-  .frame__title {
-    grid-area: title;
-    font-size: inherit;
-    margin: 0;
-  }
-
-  .frame__back {
-    grid-area: back;
-    justify-self: start;
-  }
-
-  .frame__archive {
-    grid-area: archive;
-    justify-self: start;
-  }
-
-  .frame__github {
-    grid-area: github;
-  }
-
-  .frame__tags {
-    grid-area: tags;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .frame__demos {
-    grid-area: demos;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  @media screen and (min-width: 53em) {
-    padding: var(--page-padding);
-    position: fixed;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    width: 100%;
-    grid-template-columns: auto auto auto auto 1fr;
-    grid-template-rows: auto auto;
-    align-content: space-between;
-    grid-template-areas:
-      'title back github archive sponsor'
-      'tags tags tags tags ...';
-
-    .frame__tags {
-      align-self: end;
-    }
-
-    .frame__demos,
-    #cdawrap {
-      justify-self: end;
-      text-align: right;
-      max-width: 250px;
-    }
-  }
+a:hover, button:hover {
+  text-decoration: underline;
+  color: var(--color-link-hover);
 }
 
+a:focus, button:focus {
+  outline: none;
+  background: var(--color-bg);
+}
+
+a:not(:focus-visible), button:not(:focus-visible) {
+  background: transparent;
+}
+
+a:focus-visible, button:focus-visible {
+  outline: 2px solid red;
+  background: transparent;
+}
+
+/* --- TEXTOS Y POSICIONES (Usados en index.astro) --- */
 .content {
   padding: 100vh var(--page-padding) 25vh;
 }
 
 .group {
-  display: grid;
   margin-bottom: 10vh;
   display: flex;
   flex-direction: column;
@@ -162,77 +74,33 @@ a {
   font-weight: 400;
 }
 
-.pos-2 {
-  margin-left: 25vw;
-}
-
-.pos-3 {
-  margin-left: 70vw;
-}
-
-.pos-4 {
-  margin-left: auto;
-}
-
-.pos-5 {
-  margin-top: 200px;
-  opacity: 1;
-}
-
-.pos-6 {
-  margin-left: auto;
-  margin-top: 200px;
-  opacity: 1;
-}
-
-.pos-7 {
-  margin-top: 200px;
-  opacity: 1;
-  filter: blur(1.2px);
-}
-
-.pos-8 {
-  margin-left: 25vw;
-  margin-top: 50px;
-  opacity: 1;
-  filter: blur(2px);
-}
-
-.pos-9 {
-  margin-left: 25vw;
-  margin-top: 250px;
-}
-
-.pos-10 {
-  margin-left: 70vw;
-  margin-top: 40vh;
-}
+.pos-2 { margin-left: 25vw; }
+.pos-3 { margin-left: 70vw; }
+.pos-4 { margin-left: auto; }
+.pos-5 { margin-top: 200px; opacity: 1; }
+.pos-6 { margin-left: auto; margin-top: 200px; opacity: 1; }
+.pos-7 { margin-top: 200px; opacity: 1; filter: blur(1.2px); }
+.pos-8 { margin-left: 25vw; margin-top: 50px; opacity: 1; filter: blur(2px); }
+.pos-9 { margin-left: 25vw; margin-top: 250px; }
+.pos-10 { margin-left: 70vw; margin-top: 40vh; }
 
 .logo {
   font-size: clamp(2rem, 10vw, 4rem);
   font-family: 'lores-12', sans-serif;
   font-weight: 400;
-  
 }
 
-
-
-.dif{
+.dif {
   padding: 5px;
-  
-  background-color: #EAE4D9; /* El blanco invierte los colores */
+  background-color: #EAE4D9; 
   color: #3C3A41;
   mix-blend-mode: difference;
 }
 
+/* --- UTILIDADES VISUALES GLOBALES --- */
 @keyframes blink-cursor {
-  from,
-  to {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .typing-indicator {
@@ -251,6 +119,30 @@ a {
   top: 0;
 }
 
+/* --- IMÁGENES SECUENCIALES (Usados en index.astro) --- */
+.image-thumbnail-wrapper {
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 15vw;
+  z-index: -1; 
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+
+.image-sequence-fixed {
+  z-index: -1; 
+}
+
+#scroll-image {
+  max-width: 80vw;
+  max-height: 80vh;
+  object-fit: contain;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* --- CLIENTES HOVER (Usados en index.astro) --- */
 .related {
   container-type: inline-size;
 }
@@ -259,130 +151,6 @@ a {
   text-align: center;
   padding-top: 3rem;
 }
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  padding: 5rem var(--page-padding) 10vh;
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-/* Grid item (the link) */
-.grid__item {
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  color: inherit;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #111;
-}
-
-/* Image block */
-.grid__item-img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  background-size: cover;
-  background-position: center;
-  opacity: 0.4;
-  transition: all 0.5s ease;
-}
-
-/* Subtle zoom on hover */
-.grid__item:hover .grid__item-img {
-  transform: scale(1.1);
-  opacity: 1;
-}
-
-/* Title */
-.grid__item-title {
-  padding: 1rem;
-  font-size: 0.95rem;
-  font-weight: 400;
-  line-height: 1.4;
-}
-
-/* Optional: nicer focus state for accessibility */
-.grid__item:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 4px;
-}
-
-@container (max-width: 800px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-  .grid__item-img {
-    display: none;
-  }
-  .grid__item-title {
-    padding: 0.25rem;
-    line-height: 1;
-  }
-}
-
-
-
-
-.image-thumbnail-wrapper {
-
-  left: 50%;
-  transform: translate(-50%, 0);
-  width: 15vw;
-  
-  z-index: -1; /* Below text, above background */
-  pointer-events: none;
-  display: grid;
-  place-items: center;
-}
-
-.image-thumbnail {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 30vh;
-}
-
-
-
-.image-sequence-container {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: sticky;
-  top: 0;
-}
-
-#scroll-image {
-  max-width: 80%;
-  height: auto;
-  transition: opacity 0.3s ease; /* Suaviza el cambio de imagen */
-}
-
-/* src/styles/base.css */
-
-.image-sequence-fixed.fixed {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100vh;
-  pointer-events: none; /* Para que no bloquee los clics en los enlaces */
-  z-index: -1; /* Colócalo detrás del texto si lo prefieres */
-}
-
-#scroll-image {
-  max-width: 80vw;
-  max-height: 80vh;
-  object-fit: contain;
-  opacity: 1;
-}
-
-
-/*clientes*/
 
 .clients {
   position: relative;
@@ -395,27 +163,6 @@ a {
   align-items: flex-end;
   gap: 2rem;
   overflow: hidden;
-  
-}
-.nav {
-  position: relative;
- 
-  height: 100vh;
-  padding: 2rem;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  gap: 2rem;
-  overflow: hidden;
-  
-}
-
-.flex-end {
-  display: flex;
-
-  justify-content:space-around;
- 
-
 }
 
 .clients-preview {
@@ -435,7 +182,7 @@ a {
   left: 0;
   width: 100%;
   height: 100%;
-  clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%); /* Estado inicial cerrado */
+  clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%);
   will-change: clip-path;
   overflow: hidden;
 }
@@ -456,7 +203,7 @@ a {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.75rem;
-  mix-blend-mode: difference; /* Efecto visual sobre la imagen */
+  mix-blend-mode: difference;
   z-index: 2;
 }
 
@@ -467,10 +214,7 @@ a {
   cursor: pointer;
 }
 
-
-/*  TRANSITIONS */
-
-/* Configuramos el bloque revealer (la capa inicial) */
+/* --- TRANSICIONES DE PÁGINA (Layout.astro) --- */
 .revealer {
   position: fixed;
   top: 0;
@@ -478,55 +222,30 @@ a {
   width: 100vw;
   height: 100svh;
   transform-origin: center top;
-  background-color: #3C3A41; /* Ajusta este color al fondo que desees */
+  background-color: var(--color-text);
   pointer-events: none;
   z-index: 9999;
 }
 
-/* === CONFIGURACIÓN DE VIEW TRANSITIONS === */
-
-/* Cancelamos las animaciones por defecto de Astro */
-::view-transition-old(root),
-::view-transition-new(root) {
+::view-transition-old(root), ::view-transition-new(root) {
   animation: none !important;
 }
 
-/* Evitamos que los elementos se superpongan mal */
 ::view-transition-image-pair(root) {
   isolation: isolate;
   will-change: clip-path;
 }
 
-/* La página vieja se queda quieta al fondo */
 ::view-transition-old(root) {
   z-index: 1;
 }
 
-/* La página nueva se dibuja por encima y ejecuta el clip-path */
 ::view-transition-new(root) {
   z-index: 10000;
-  /* Aquí reemplazamos la función de JS de Next.js por CSS puro */
   animation: clip-reveal 2s cubic-bezier(0.9, 0, 0.1, 1) forwards !important;
 }
 
-/* La animación exacta que estaba en components/Nav.jsx */
 @keyframes clip-reveal {
-  0% {
-    clip-path: polygon(25% 75%, 75% 75%, 75% 75%, 25% 75%);
-  }
-  100% {
-    clip-path: polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%);
-  }
+  0% { clip-path: polygon(25% 75%, 75% 75%, 75% 75%, 25% 75%); }
+  100% { clip-path: polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%); }
 }
-
-
-.btn-transicion {
-      display: inline-block;
-      padding: 15px 30px;
-      background-color: #3C3A41;
-      color: #EAE4D9;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 5px;
-      margin-top: 50px;
-    }

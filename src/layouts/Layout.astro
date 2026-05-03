@@ -1,48 +1,78 @@
 ---
-// src/layouts/Layout.astro
-import { ClientRouter } from 'astro:transitions'; // <- ¡Cambiamos a ClientRouter!
-import '../styles/base.css'; 
+import { ClientRouter } from "astro:transitions";
+import Menu from "../components/Menu.astro";
+import "../styles/base.css";
 ---
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en" class="no-js">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Fuentes de Adobe -->
+    <title>No Brand Studio</title>
     <link rel="stylesheet" href="https://use.typekit.net/upd0woi.css" />
-    
-    <!-- Habilitamos el enrutador del cliente (antes ViewTransitions) -->
+
     <ClientRouter />
 
     <script is:inline>
-      document.documentElement.className = 'js';
+      if (typeof window !== "undefined") {
+        history.scrollRestoration = "manual";
+
+        const originalReplaceState = history.replaceState;
+        let lastReplaceTime = 0;
+        history.replaceState = function () {
+          const now = performance.now();
+          if (now - lastReplaceTime > 50) {
+            originalReplaceState.apply(this, arguments);
+            lastReplaceTime = now;
+          }
+        };
+      }
+    </script>
+
+    <script is:inline src="/scripts/gsap.min.js"></script>
+    <script is:inline src="/scripts/ScrollTrigger.min.js"></script>
+    <script is:inline src="/scripts/ScrollSmoother.min.js"></script>
+    <script is:inline src="/scripts/Flip.min.js"></script>
+    <script is:inline src="/scripts/ScrambleTextPlugin.min.js"></script>
+    <script
+      is:inline
+      src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollToPlugin.min.js"
+    ></script>
+    <script
+      is:inline
+      src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/CustomEase.min.js"
+    ></script>
+
+    <script is:inline>
+      document.documentElement.className = "js";
     </script>
   </head>
   <body class="demo-1">
-    <!-- Capa de la transición -->
     <div class="revealer"></div>
 
-    <div class="el pos-1" data-alt-pos="pos-3" data-scramble-duration="0">No Brand Studio.</div>
-    <div class="el pos-1 typing-indicator" data-alt-pos="pos-3" data-scramble-duration="0">█</div>
+    <Menu />
 
-    
-       
     <slot />
 
-   <!-- Lógica de GSAP para la animación inicial adaptada a Astro -->
     <script>
-      import { gsap } from 'gsap';
-      
-      document.addEventListener('astro:page-load', () => {
-        // Aseguramos que el origen sea arriba y la escala inicial 1
-        gsap.set(".revealer", { transformOrigin: "top center", scaleY: 1 }); 
-        
-        // Ejecutamos la animación
+      document.addEventListener("astro:page-load", () => {
+        // 1. Rescatamos las variables globales para silenciar a VS Code
+        const gsap = window["gsap"];
+        const CustomEase = window["CustomEase"];
+
+        if (!gsap || !CustomEase) return; // Seguridad extra
+
+        gsap.registerPlugin(CustomEase);
+        CustomEase.create("hop", "0.9, 0, 0.1, 1");
+
+        gsap.set(".revealer", { transformOrigin: "top center", scaleY: 1 });
+
         gsap.to(".revealer", {
           scaleY: 0,
           duration: 1.25,
-          delay: 0.1, 
-          ease: "power4.inOut", // Usamos un ease nativo, a prueba de fallos
+          delay: 0.1,
+          ease: "hop",
         });
       });
     </script>

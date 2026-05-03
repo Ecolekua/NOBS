@@ -1,0 +1,51 @@
+<nav class="main-nav" transition:persist>
+  <!-- Columna 1: Logo -->
+<div class="col ">      
+    <!-- Añadir data-astro-reload fuerza a limpiar la memoria al volver al Home -->
+    <a href="/" data-astro-reload>No Brand Studio</a>
+    <div class="typing-indicator" data-scramble-duration="0"> </div>
+  </div>
+  <!-- Columna 2: Enlaces -->
+  <div class="col links">
+    <a href="/work">Work</a>
+    <a href="/studio">Studio</a>
+  </div>
+  <!-- Columna 3: Info extra -->
+  <div class="col info">
+    <p>Santiago, Chile</p>
+  </div>
+</nav>
+
+<style>
+  .main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+  .col {
+    display: flex;
+  }
+  .col.links {
+    justify-content: center;
+    gap: 2rem;
+  }
+  .col.info {
+    justify-content: flex-end;
+  }
+  a, p {
+    color: var(--color-link);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  a:hover {
+    opacity: 0.7;
+  }
+</style>
