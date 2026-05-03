@@ -222,7 +222,7 @@ a:focus-visible, button:focus-visible {
   width: 100vw;
   height: 100svh;
   transform-origin: center top;
-  background-color: var(--color-link);
+  background-color: var(--color-bg);
   pointer-events: none;
   z-index: 9999;
 }
@@ -242,7 +242,7 @@ a:focus-visible, button:focus-visible {
 
 ::view-transition-new(root) {
   z-index: 10000;
-  animation: clip-reveal 2s cubic-bezier(0.9, 0, 0.1, 1) forwards !important;
+  animation: clip-reveal 1s cubic-bezier(0.9, 0, 0.1, 1) forwards !important;
 }
 
 @keyframes clip-reveal {
