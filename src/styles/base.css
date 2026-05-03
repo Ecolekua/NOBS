@@ -222,7 +222,7 @@ a:focus-visible, button:focus-visible {
   width: 100vw;
   height: 100svh;
   transform-origin: center top;
-  background-color: var(--color-text);
+  background-color: var(--color-link);
   pointer-events: none;
   z-index: 9999;
 }
@@ -246,6 +246,12 @@ a:focus-visible, button:focus-visible {
 }
 
 @keyframes clip-reveal {
-  0% { clip-path: polygon(25% 75%, 75% 75%, 75% 75%, 25% 75%); }
-  100% { clip-path: polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%); }
+  0% {
+    /* Nace exactamente desde un punto en el centro de la pantalla */
+    clip-path: polygon(25% 50%, 75% 50%, 75% 50%, 25% 50%);
+  }
+  100% {
+    /* Se expande a las 4 esquinas de la pantalla */
+    clip-path: polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%);
+  }
 }

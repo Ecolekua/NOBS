@@ -17,7 +17,6 @@ import "../styles/base.css";
     <script is:inline>
       if (typeof window !== "undefined") {
         history.scrollRestoration = "manual";
-
         const originalReplaceState = history.replaceState;
         let lastReplaceTime = 0;
         history.replaceState = function () {
@@ -29,7 +28,6 @@ import "../styles/base.css";
         };
       }
     </script>
-
     <script is:inline src="/scripts/gsap.min.js"></script>
     <script is:inline src="/scripts/ScrollTrigger.min.js"></script>
     <script is:inline src="/scripts/ScrollSmoother.min.js"></script>
@@ -55,24 +53,24 @@ import "../styles/base.css";
 
     <slot />
 
-    <script>
-      document.addEventListener("astro:page-load", () => {
-        // 1. Rescatamos las variables globales para silenciar a VS Code
-        const gsap = window["gsap"];
-        const CustomEase = window["CustomEase"];
-
-        if (!gsap || !CustomEase) return; // Seguridad extra
-
-        gsap.registerPlugin(CustomEase);
-        CustomEase.create("hop", "0.9, 0, 0.1, 1");
-
-        gsap.set(".revealer", { transformOrigin: "top center", scaleY: 1 });
-
+  <script>
+      import { gsap } from 'gsap';
+             
+      document.addEventListener('astro:page-load', () => {
+        // 1. Estado inicial: Escala completa y opacidad al 100%
+        gsap.set(".revealer", { 
+          transformOrigin: "center center", 
+          scaleY: 1, 
+          opacity: 1 // <-- Aseguramos que inicie totalmente visible
+        });
+                  
+        // 2. Animación: Se encoge y se vuelve transparente al mismo tiempo
         gsap.to(".revealer", {
           scaleY: 0,
+          opacity: 0, // <-- Aquí agregamos el cambio de opacidad
           duration: 1.25,
-          delay: 0.1,
-          ease: "hop",
+          delay: 0.1, 
+          ease: "power4.inOut", 
         });
       });
     </script>

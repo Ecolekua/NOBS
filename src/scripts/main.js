@@ -1,53 +1,40 @@
 // src/scripts/main.js
 
-let ctx; // Contexto global de GSAP
+let ctx; 
 
 function initAnimations() {
-    // 1. SELECCIÓN ESTRICTA Y EN CRUDO DEL DOM
-    // Usar getElementById fuerza a GSAP a tomar el elemento de la página NUEVA y no un remanente de Astro
-    const wrapperEl = document.getElementById('smooth-wrapper');
-    const contentEl = document.getElementById('smooth-content');
-
-    // 2. ESCUDO PARA PÁGINAS SIN ANIMACIÓN (Ej: work.astro)
-    // Si no existen los contenedores, abortamos la función suavemente sin romper JavaScript
-    if (!wrapperEl || !contentEl) {
-        console.warn("GSAP: Estructura #smooth-wrapper no encontrada. Animaciones omitidas.");
-        return;
-    }
-
-    // 3. SMOOTHER GLOBAL
+    // AQUÍ MANTENEMOS TU CONFIGURACIÓN FLUIDA ORIGINAL
     window.miSmoother = ScrollSmoother.create({
-        wrapper: wrapperEl,
-        content: contentEl,
-        smooth: 1
+        wrapper: '#smooth-wrapper',
+        content: '#smooth-content',
+        smooth: 1,
+        normalizeScroll: true // <-- Mantenemos la fluidez extrema
     });
 
-    // 4. BARRERA DEL HOME
-    // Solo continuamos con las lógicas complejas si estamos en index.astro
     const scrollMain = document.querySelector('.content');
     if (!scrollMain) return; 
 
-    // --- DE AQUÍ EN ADELANTE, SOLO SE EJECUTA EN EL HOME ---
+    // --- REFERENCIAS Y LÓGICA DEL HOME ---
     const textElements = document.querySelectorAll('.el');
-    const logoEl = document.querySelector('.logo'); 
+    const logoEl = document.querySelector('.logo > span'); // Ajustado a tu versión
+    const relatedEl = document.querySelector('.related');
+    const relatedItems = relatedEl?.querySelectorAll('.grid__item');
     const imgElement = document.getElementById('scroll-image');
     const clientsPreview = document.querySelector(".clients-preview");
     const clientNames = document.querySelectorAll(".client-name");
 
-    const logoSpan = document.querySelector('.logo > span');
-    if (logoSpan) {
-        const logoText = logoSpan.textContent;
+    if (logoEl) {
+        const logoText = logoEl.textContent;
         textElements.forEach((el) => { el.dataset.text = el.textContent; });
-        logoSpan.dataset.text = logoText;
+        logoEl.dataset.text = logoText;
     }
 
     function initImageSequence() {
-        if (!imgElement) return;
+        if (!imgElement || !scrollMain) return;
         const images = [
             '/images/apple.webp', '/images/BMW.webp', '/images/bottega.webp', 
             '/images/microsoft.webp', '/images/prada.webp'
         ];
-
         ScrollTrigger.create({
             trigger: scrollMain,
             start: "top top",
@@ -56,7 +43,6 @@ function initAnimations() {
             onUpdate: (self) => {
                 const progress = self.progress;
                 const index = Math.floor(progress * (images.length - 1));
-                
                 if (imgElement.dataset.currentIndex !== index.toString()) {
                     gsap.to(imgElement, {
                         opacity: 0.1,
@@ -85,42 +71,31 @@ function initAnimations() {
     function initClientsHover() {
         if (!clientsPreview || clientNames.length === 0) return;
         CustomEase.create("hop", "M0,0 C0.071,0.505 0.192,0.726 0.318,0.852 0.45,0.984 0.504,1 1,1");
-        
-        const clientImages = [
-            '/images/apple.webp', '/images/BMW.webp', '/images/bottega.webp', 
-            '/images/microsoft.webp', '/images/prada.webp'
-        ];
-        
+        const clientImages = ['/images/apple.webp', '/images/BMW.webp', '/images/bottega.webp', '/images/microsoft.webp', '/images/prada.webp'];
         let activeClientIndex = -1;
 
         clientNames.forEach((client, index) => {
             let activeClientImgWrapper = null;
             let activeClientImg = null;
-
             client.addEventListener("mouseover", () => {
                 if (activeClientIndex === index) return;
                 activeClientIndex = index;
-
                 const clientImgWrapper = document.createElement("div");
                 clientImgWrapper.className = "client-img-wrapper";
                 const clientImg = document.createElement("img");
                 clientImg.src = clientImages[index];
-                
-                gsap.set(clientImg, { scale: 1.25, opacity: 0 });
+                gsap.set(clientImg, { scale: 2.25, opacity: 0 });
                 clientImgWrapper.appendChild(clientImg);
                 clientsPreview.appendChild(clientImgWrapper);
-                
                 activeClientImgWrapper = clientImgWrapper;
                 activeClientImg = clientImg;
-
                 gsap.to(clientImgWrapper, {
                     clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
                     duration: 0.5,
                     ease: "hop",
                 });
-                gsap.to(clientImg, { opacity: 1, scale: 1, duration: 1.25, ease: "hop" });
+                gsap.to(clientImg, { opacity: 1, scale: 1, duration: 0.6, ease: "hop" });
             });
-
             client.addEventListener("mouseout", () => {
                 activeClientIndex = -1;
                 if (activeClientImg && activeClientImgWrapper) {
@@ -132,7 +107,7 @@ function initAnimations() {
     }
 
     function resetTextElements() {
-        textElements.forEach((el) => { gsap.set(el, { clearProps: 'transform,opacity,filter,width' }); });
+        textElements.forEach((el) => { gsap.set(el, { clearProps: 'transform,opacity,filter' }); });
     }
 
     function initFlips() {
@@ -141,13 +116,11 @@ function initAnimations() {
             const originalClass = [...el.classList].find((c) => c.startsWith('pos-'));
             const targetClass = el.dataset.altPos;
             if (!originalClass || !targetClass) return;
-            
             el.classList.add(targetClass);
             el.classList.remove(originalClass);
             const flipState = Flip.getState(el, { props: 'opacity, filter, width' });
             el.classList.add(originalClass);
             el.classList.remove(targetClass);
-            
             Flip.to(flipState, { ease: "expo.inOut", scrollTrigger: { trigger: el, start: 'clamp(bottom bottom-=10%)', end: 'clamp(center center)', scrub: true } });
             Flip.from(flipState, { ease: "expo.inOut", scrollTrigger: { trigger: el, start: 'clamp(center center)', end: 'clamp(top top)', scrub: true } });
         });
@@ -157,7 +130,7 @@ function initAnimations() {
         textElements.forEach((el) => {
             ScrollTrigger.create({ trigger: el, start: 'top bottom', end: 'bottom top', onEnter: () => scramble(el), onEnterBack: () => scramble(el) });
         });
-        if(logoSpan) scramble(logoSpan, { revealDelay: 0.5 });
+        if(logoEl) scramble(logoEl, { revealDelay: 0.5 });
     }
 
     function scramble(el, { duration, revealDelay = 0 } = {}) {
@@ -165,20 +138,22 @@ function initAnimations() {
         gsap.fromTo(el, { scrambleText: { text: '', chars: '' } }, { scrambleText: { text, chars: 'upperAndLowerCase', revealDelay }, duration: duration ?? 1 });
     }
 
-    function initFooterFade() {
-        const relatedEl = document.querySelector('.related');
-        if (!relatedEl) return;
-        
+    // Funcionalidad de relacionados de tu versión original
+    function initRelatedDemos() {
+        if (!relatedEl || !relatedItems) return;
+        gsap.set(relatedItems, { xPercent: 100, scale: 0, opacity: 0 });
         ScrollTrigger.create({
             trigger: relatedEl,
             start: 'top center+=25%',
             onEnter: () => {
-                if (logoEl) gsap.to(logoEl, { duration: 0.7, opacity: 0 });
+                if(logoEl) gsap.to(logoEl, { duration: 0.7, opacity: 0 });
                 if (imgElement) gsap.to(imgElement, { duration: 0.7, opacity: 0 });
+                gsap.to(relatedItems, { duration: 0.7, stagger: 0.1, xPercent: 0, scale: 1, opacity: 1 });
             },
             onLeaveBack: () => {
-                if (logoEl) gsap.to(logoEl, { duration: 0.5, opacity: 1 });
+                if(logoEl) gsap.to(logoEl, { duration: 0.5, opacity: 1 });
                 if (imgElement) gsap.to(imgElement, { duration: 0.5, opacity: 1 });
+                gsap.to(relatedItems, { duration: 0.5, scale: 0, opacity: 0, xPercent: 100, stagger: 0.05 });
             }
         });
     }
@@ -194,10 +169,10 @@ function initAnimations() {
 
     initFlips();
     initScramble();
+    initRelatedDemos();
     initImageSequence();
     initImageInteraction();
     initClientsHover();
-    initFooterFade();
     startAutoScroll();
 
     const handleResize = () => {
@@ -208,20 +183,19 @@ function initAnimations() {
     window._homeResizeHandler = handleResize; 
 }
 
-// --- HOOKS DE ASTRO ---
+// --- HOOKS DE ASTRO PARA GESTIONAR EL CICLO DE VIDA ---
 document.addEventListener('astro:page-load', () => {
     gsap.registerPlugin(ScrollTrigger, ScrollSmoother, Flip, ScrambleTextPlugin, ScrollToPlugin, CustomEase);
-    
     ctx = gsap.context(() => {
         initAnimations(); 
     });
 });
 
-// ESCUDO DE LIMPIEZA DE TRANSICIÓN
+// ESCUDO DE LIMPIEZA DE TRANSICIÓN (Esto te salva del congelamiento)
 document.addEventListener('click', (e) => {
     const link = e.target.closest('a');
-    
     if (link && link.href && link.href !== window.location.href) {
+        
         if (window.miSmoother) {
             gsap.killTweensOf(window.miSmoother);
             window.miSmoother.kill();
@@ -230,11 +204,7 @@ document.addEventListener('click', (e) => {
 
         ScrollTrigger.getAll().forEach(t => t.kill());
         ScrollTrigger.clearScrollMemory();
-        
-        if (ctx) {
-            ctx.revert();
-            ctx = null; // Vaciamos la referencia por seguridad
-        }
+        if (ctx) ctx.revert();
 
         document.documentElement.style.overflow = '';
         document.body.style.overflow = '';
