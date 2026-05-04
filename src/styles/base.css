@@ -9,10 +9,10 @@ html, body {
 
 :root {
   font-size: 13px;
-  --color-text: #3d3c40;
-  --color-bg: #ebe9e5;
-  --color-link: #D73534;
-  --color-link-hover: #d85b35e7;
+  --color-bg:  #0a0a0a;
+  --color-text:#ebe9e5 ;
+  --color-link: #f11d1d;
+  --color-link-hover: #f93f06e7;
   --page-padding: 2rem;
 }
 
@@ -75,7 +75,8 @@ a:focus-visible, button:focus-visible {
 .el--xl {
   font-size: clamp(2rem, 20vw, 15rem);
   opacity: 1;
-  font-family: 'lores-12', sans-serif;
+  
+  /*font-family: 'lores-12', sans-serif;*/
   font-weight: 400;
 }
 
