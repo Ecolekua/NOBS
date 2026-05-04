@@ -1,162 +1,106 @@
 ---
-// src/pages/home.astro
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Inicio - No Brand Studio">
-  
-  <header class="frame">
-  
-  </header>
-<div class="logo fixed">
-      <span class="dif">No Brand Studio.</span>
-    </div>
-  <!-- ==========================================
-       1. TU CÓDIGO DECORATIVO DE FONDO AQUÍ
-       ========================================== -->
-  <div class="bg-decorative">
-     <div class="group">
-          <div class="el pos-3" data-alt-pos="pos-8">Dormant voltage</div>
-		 <div class="el pos-3 typing-indicator" data-alt-pos="pos-3" data-scramble-duration="0">█</div>
-          <a class="el pos-3" data-alt-pos="pos-3" data-scramble-duration="0"> Chilean UX Design studio.</a>
+<Layout>
+  <!-- ESQUELETO DE GSAP SCROLLSMOOTHER EMPAREJADO CON EL HOME -->
+  <div id="smooth-wrapper">
+    <main id="smooth-content">
+      <section class="studio">
+        <div class="col">
+          <h2 class="studio-header reveal-text">Our Story</h2>
+        </div>
+        <div class="col">
+
+
+
+            <header class="frame">
+		 <div class="el pos-1 typing-indicator" data-alt-pos="pos-3" data-scramble-duration="0">█</div>
+          <a class="text-reveal el pos-1" data-alt-pos="pos-3" data-scramble-duration="0"> No Brand studio.</a>
           
        
       <h1 class="frame__title  flex-end">
-		 <div class="el pos-1 typing-indicator" data-alt-pos="pos-3" data-scramble-duration="0">█</div>
+		 
        
-      
-       
+        
+        <a class="nav text-reveal">Chilean UX Design studio.</a>
       </h1>
-      <a class="frame__archive el pos-2" href="https://tympanus.net/codrops/hub/">All demos</a>
-       
+      <a class="frame__archive" href="#">All demos</a>
+       <a href="/studio" class="btn-transicion frame__archive">Ir a Studio</a>
                       
-      <a class="frame__github el pos-2" href="#">GitHub</a>
-      <nav class="frame__tags el pos-2">
+      <a class="frame__github" href="#">GitHub</a>
+      <nav class="frame__tags">
         <a href="#">#scroll</a>
         <a href="#">#typography</a>
         <a href="#">#gsap</a>
       </nav>
-    </div>
-    
+    </header>
 
-    <!-- Contenedor de todos los textos animados -->
-    <div class="content">
-      <div class="group">
-    <div class="el pos-4" data-alt-pos="pos-2">Signal</div>
-    <div class="el pos-4" data-alt-pos="pos-2">Vacant orbit</div>
-    <div class="el pos-4" data-alt-pos="pos-2">Quantum waves</div>
-  </div>
-  <div class="group">
-    <div class="el pos-1" data-alt-pos="pos-3">Neural glow</div>
-    <div class="el pos-1" data-alt-pos="pos-3">Micro distortions</div>
-    <div class="el pos-1" data-alt-pos="pos-3">Data streams</div>
-    <div class="el pos-1" data-alt-pos="pos-3">Spark</div>
-    <div class="el pos-1" data-alt-pos="pos-3">Cold radiance</div>
-  </div>
-  
-  <div class="group">
-    <div class="el el--xl pos-1" data-alt-pos="pos-2" data-scramble-duration="2.5">M</div>
-  </div>
-  <div class="group">
-    <div class="el pos-1" data-alt-pos="pos-3" data-scramble-duration="0"> </div>
-    <div class="el pos-1 typing-indicator" data-alt-pos="pos-3" data-scramble-duration="0"> </div>
-  </div>
-      <div class="group">
-        <div class="el pos-4" data-alt-pos="pos-2">Signal</div>
-        <div class="el pos-4" data-alt-pos="pos-2">Vacant orbit</div>
-        <div class="el pos-4" data-alt-pos="pos-2">Quantum waves</div>
-      </div>
-      <div class="group">
-        <div class="el pos-1" data-alt-pos="pos-3">Neural glow</div>
-        <div class="el pos-1" data-alt-pos="pos-3">Micro distortions</div>
-        <div class="el pos-1" data-alt-pos="pos-3">Data streams</div>
-        <div class="el pos-1" data-alt-pos="pos-3">Spark</div>
-        <div class="el pos-1" data-alt-pos="pos-3">Cold radiance</div>
-      </div>
-      <!-- ... Continúa pegando los demás grupos aquí ... -->
-    </div>
 
-  </div>
-  <!-- FIN DE LA DECORACIÓN -->
 
-  <!-- ==========================================
-       2. CONTENIDO PRINCIPAL DE LA PÁGINA
-       ========================================== -->
-  <div id="smooth-wrapper">
-    <main id="smooth-content">
-      
-      <section class="clients" style="padding-top: 15vh;">
-        <div class="clients-header">
-          <p>Trusted Us</p>
+          <div class="animate-text reveal-text">
+            En No Brand Studio, entendemos que la creatividad no es solo una
+            habilidad, sino una forma de pensar. Nacimos en Chile a partir de
+            una convicción: diseñar con intención desafiando lo obvio y
+            construyendo experiencias significativas. Somos un estudio
+            multidisciplinario de diseño y tecnología, donde convergen diseño,
+            estrategia y desarrollo para dar vida a productos centrados en la
+            experiencia de usuario.
+            <br /><br />
+            Hoy, colaboramos con clientes y equipos que buscan ir más allá de lo convencional,
+            desarrollando soluciones digitales, identidades y productos que combinan
+            funcionalidad, estética y propósito.
+          </div>
+          <div class="about-img">
+            <img
+              src="/images/bottega.webp"
+              alt="Team at work in Nuvoro's creative space"
+            />
+          </div>
         </div>
-        
-        <div class="clients-list">
-          <!-- Ahora son enlaces <a> que apuntan a sus respectivas páginas -->
-          <a href="/proyectos/EstudioLarco" class="client-name logo"><h1>Estudio Larco,</h1></a>
-          <a href="/proyectos/bmw" class="client-name logo"><h1>Heel,</h1></a>
-          <a href="/proyectos/bottega" class="client-name logo"><h1>Serres,</h1></a>
-          <a href="/proyectos/microsoft" class="client-name logo"><h1>Procolor,</h1></a>
-          <a href="/proyectos/prada" class="client-name logo"><h1>Labs.</h1></a>
-        </div>
-        
-        <div class="clients-preview">
-          <!-- Tu imagen por defecto -->
-          <video 
-            id="default-client-img" 
-            src="/images/EstudioLarco.mp4" 
-            poster="/images/microsoft.webp"
-            autoplay 
-            loop 
-            muted 
-            playsinline
-            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; pointer-events: none;"
-          ></video>
-        </div> 
       </section>
-
-      <footer>
-        <p>Experiment 626</p>
-        <p>&nbsp;  &nbsp;</p>
-      </footer>
-
     </main>
   </div>
 
-  <script>
-    import "../scripts/main.js";
-  </script>
+  <!-- ESTILOS ESPECÍFICOS DE LA PÁGINA STUDIO (Aislados de base.css) -->
+  <style>
+    .studio {
+      margin-top: 2rem;
+      padding: 15em 2rem;
+      display: flex;
+      gap: 1em;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+    }
+    .studio .col:nth-child(1) {
+      flex: 1;
+    }
+    .studio .col:nth-child(2) {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 2em;
+    }
+    .about-img {
+      aspect-ratio: 5/7;
+      overflow: hidden;
+    }
+    .about-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    @media (max-width: 900px) {
+      .studio {
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <!-- LÓGICA DE ANIMACIÓN (Usando el GSAP global + import local de SplitText) -->
+   <!-- LÓGICA DE ANIMACIÓN -->
+  
 </Layout>
-
-<!-- ==========================================
-     3. EL CSS MÁGICO PARA EL EFECTO DE FONDO
-     ========================================== -->
-<style>
-  /* Convierte todo el bloque de texto en un fondo fantasma */
-  .bg-decorative {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 0; /* Lo manda detrás de la sección de clientes */
-    opacity: 0.3; /* Súper tenue, ajusta este valor a tu gusto (ej: 0.05 para más sutil) */
-    pointer-events: none; /* CLAVE: Evita que el usuario seleccione este texto o interfiera con los links de los clientes */
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  /* Asegura que los textos internos no rompan el contenedor */
-  .bg-decorative .content {
-    transform: scale(0.5); /* Lo encogemos un poco para que sea un buen patrón de fondo */
-    width: 100%;
-    height: 100%;
-  }
-
-  /* Aseguramos que la sección de clientes esté siempre POR ENCIMA de la decoración */
-  .clients {
-    position: relative;
-    z-index: 10;
-  }
-</style>
+ 
+</Layout>
