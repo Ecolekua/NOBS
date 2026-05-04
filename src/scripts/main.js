@@ -64,14 +64,28 @@ function initAnimations() {
 
     function safeRun(fn) { try { fn(); } catch(e) { console.error(e); } }
 
-    // Función de secuencia inactiva (la dejamos por si a futuro decides usar fotos estáticas)
+    // 4. SECUENCIA DE IMÁGENES ACTUALIZADA (Video inicial -> Scroll de fotos)
     function initImageSequence() {
         if (!imgElement || !scrollMain) return;
+        
+        const bgVideo = document.getElementById('bg-video'); 
         const images = ['/images/apple.webp', '/images/BMW.webp', '/images/bottega.webp', '/images/microsoft.webp', '/images/prada.webp'];
+        
         ScrollTrigger.create({
             trigger: scrollMain,
             start: "top top", end: "bottom bottom", scrub: true,
             onUpdate: (self) => {
+                
+                // Ocultamos el video inicial si el usuario empieza a bajar
+                if (bgVideo) {
+                    if (self.progress > 0.02) {
+                        gsap.to(bgVideo, { opacity: 0, duration: 0.3, overwrite: "auto" });
+                    } else {
+                        gsap.to(bgVideo, { opacity: 1, duration: 0.3, overwrite: "auto" });
+                    }
+                }
+
+                // Reproducimos la secuencia de fotos en la etiqueta <img>
                 const index = Math.floor(self.progress * (images.length - 1));
                 if (imgElement.dataset.currentIndex !== index.toString()) {
                     gsap.to(imgElement, { opacity: 0.1, duration: 0.1, onComplete: () => {
@@ -84,7 +98,7 @@ function initAnimations() {
         });
     }
 
-    // 4. ANIMACIÓN FLIP (Textos volando en distintas direcciones)
+    // 5. ANIMACIÓN FLIP (Textos volando en distintas direcciones)
     function initFlips() {
         if (!textElements.length) return;
         textElements.forEach((el) => gsap.set(el, { clearProps: 'transform,opacity,filter' }));
@@ -100,7 +114,7 @@ function initAnimations() {
         });
     }
 
-    // 5. EFECTO SCRAMBLE (Descodificador de texto)
+    // 6. EFECTO SCRAMBLE (Descodificador de texto)
     function initScramble() {
         if (!window.ScrambleTextPlugin || !textElements.length) return;
         function scramble(el, d = 1, r = 0) {
@@ -111,16 +125,16 @@ function initAnimations() {
         if (logoEl) scramble(logoEl, 1, 0.5); 
     }
 
-    // 6. INTERACCIÓN HOVER DE CLIENTES (Inteligente: MP4 y Fotos, Blindado para Safari/Chrome)
+    // 7. INTERACCIÓN HOVER DE CLIENTES (Inteligente con Poster para móviles)
     function initClientsHover() {
         if (!clientsPreview || clientNames.length === 0 || !CustomEase) return;
         CustomEase.create("hop", "M0,0 C0.071,0.505 0.192,0.726 0.318,0.852 0.45,0.984 0.504,1 1,1");
         
-        // Define aquí los archivos de tus clientes (puedes mezclar mp4 y webp/jpg)
+        // Define aquí los archivos de tus clientes (actualmente fotos, pero listo para videos)
         const clientMediaFiles = [
-            '/images/EstudioLarco.mp4',       
+            '/images/apple.webp',      
             '/images/BMW.webp',        
-            '/images/bottega.webp',     
+            '/images/bottega.webp',    
             '/images/microsoft.webp',  
             '/images/prada.webp'       
         ];
@@ -130,9 +144,13 @@ function initAnimations() {
         const defaultImg = document.getElementById('default-client-img');
         const centerLogo = document.querySelector('.logo.fixed'); 
 
-        // CROSSFADE INICIAL (Espera 3.5s antes de ejecutarse)
+        // CROSSFADE INICIAL CON TUS TIEMPOS PERSONALIZADOS
         if (defaultImg) {
-            gsap.to(defaultImg, { opacity: 0.8, duration: 1.2, delay: 3.5, ease: "power2.inOut" });
+            gsap.to(defaultImg, { 
+                opacity: 0.8, 
+                duration: 1.2, 
+                delay: 1.5, // delay hovers que tú configuraste
+                ease: "power2.inOut" });
         }
 
         if (centerLogo) {
@@ -140,7 +158,7 @@ function initAnimations() {
             gsap.to(centerLogo, {
                 opacity: 0,
                 duration: 1.2,
-                delay: 2,
+                delay: 1, // delay texto nobrand que tú configuraste
                 ease: "power2.inOut",
                 onComplete: () => { centerLogo.style.display = "none"; }
             });
@@ -161,19 +179,21 @@ function initAnimations() {
                 const fileSrc = clientMediaFiles[index];
                 let mediaElement;
 
-                // DETECCIÓN DE VIDEO VS IMAGEN (MEJORADA Y BLINDADA)
+                // DETECCIÓN DE VIDEO VS IMAGEN CON RESPALDO MÓVIL
                 if (fileSrc.toLowerCase().endsWith('.mp4')) {
                     mediaElement = document.createElement("video");
                     mediaElement.src = fileSrc;
                     
-                    // 1. Los navegadores exigen que los atributos se configuren a nivel HTML puro
+                    // Aseguramos el poster cambiando la extensión a .webp
+                    const posterSrc = fileSrc.replace('.mp4', '.webp');
+                    mediaElement.setAttribute("poster", posterSrc); 
+                    
                     mediaElement.setAttribute("autoplay", "");
                     mediaElement.setAttribute("loop", "");
                     mediaElement.setAttribute("muted", "");
                     mediaElement.setAttribute("playsinline", "");
                     mediaElement.muted = true; // Doble seguridad para Safari
                     
-                    // 2. Fuerzas absolutas para que no colapse el tamaño del div vacío
                     mediaElement.style.position = "absolute";
                     mediaElement.style.top = "0";
                     mediaElement.style.left = "0";
@@ -189,7 +209,6 @@ function initAnimations() {
                 wrapper.appendChild(mediaElement); 
                 clientsPreview.appendChild(wrapper);
 
-                // 3. ¡EL TRUCO VITAL! Forzamos la descarga y reproducción justo después de inyectarlo en el DOM
                 if (mediaElement.tagName === "VIDEO") {
                     mediaElement.load();
                     const playPromise = mediaElement.play();
@@ -203,7 +222,6 @@ function initAnimations() {
                 activeMediaWrapper = wrapper; 
                 activeMediaEl = mediaElement;
                 
-                // Animaciones GSAP
                 gsap.to(wrapper, { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", duration: 0.3, ease: "hop" });
                 gsap.to(mediaElement, { opacity: 1, scale: 1, duration: 0.4, ease: "hop" });
             });
@@ -220,8 +238,8 @@ function initAnimations() {
         });
     }
 
-    // EJECUCIÓN (Mantenemos la secuencia comentada para usar el Video global)
-    // safeRun(initImageSequence); 
+    // EJECUCIÓN (¡Todo encendido!)
+    safeRun(initImageSequence); // <-- Encendido para que vuelva a funcionar el scroll
     safeRun(initFlips);
     safeRun(initScramble);
     safeRun(initClientsHover);
@@ -248,7 +266,7 @@ document.addEventListener('astro:page-load', () => {
     ctx = gsap.context(() => { initAnimations(); });
 });
 
-// LIMPIEZA AL CAMBIAR DE PÁGINA (Evita bugs de scroll)
+// LIMPIEZA AL CAMBIAR DE PÁGINA (Evita bugs de scroll y Astro View Transitions)
 document.addEventListener('click', (e) => {
     const link = e.target.closest('a');
     if (link && link.href && link.href !== window.location.href && !link.hasAttribute('data-astro-reload')) {

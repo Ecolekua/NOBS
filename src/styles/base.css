@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+html, body {
+  max-width: 100%;
+  overflow-x: hidden; /* Esto prohíbe terminantemente el scroll horizontal y los saltos a lo ancho */
+}
+
 :root {
   font-size: 13px;
   --color-text: #3d3c40;
@@ -92,8 +97,8 @@ a:focus-visible, button:focus-visible {
 
 .dif {
   padding: 5px;
-  background-color: #EAE4D9; 
-  color: #3C3A41;
+  background-color: var(--color-bg); 
+  color: var(--color-text);
   mix-blend-mode: difference;
 }
 
@@ -253,5 +258,39 @@ a:focus-visible, button:focus-visible {
   100% {
     /* Se expande a las 4 esquinas de la pantalla */
     clip-path: polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%);
+  }
+}
+
+
+
+
+/* --- ESTILOS DEL LOADER DE FONDO --- */
+
+/* 1. Escritorio: Pantalla completa normal */
+#loader-sequence-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* 2. Móvil: Convertir el loader en una caja centrada */
+@media (max-width: 768px) {
+  #loader-sequence-box {
+    /* Despegamos la caja de los bordes centrando desde la mitad */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* Ajusta estos dos valores para que la caja mida EXACTAMENTE lo mismo que la de tus clientes */
+    width: 85%;   /* Deja márgenes a los lados */
+    height: 65vh; /* Deja márgenes arriba y abajo */
   }
 }
