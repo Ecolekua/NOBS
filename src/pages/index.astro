@@ -1,17 +1,24 @@
 ---
 // src/pages/index.astro
-import Layout from '../layouts/Layout.astro';
-import Preloader from '../components/Preloader.astro';
+import Layout from "../layouts/Layout.astro";
+import Preloader from "../components/Preloader.astro";
 ---
 
 <Layout title="Intro - No Brand Studio">
-  
   <style is:global>
-    body { background-color: var(--color-bg); }
+    body {
+      background-color: var(--color-bg);
+    }
     .fade-out-layer {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background-color: var(--color-bg); z-index: 9999;
-      opacity: 0; pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: var(--color-bg);
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
     }
 
     /* EL ESCUDO: Si el body tiene la clase 'is-intro', ocultamos el logo original del Layout */
@@ -27,35 +34,41 @@ import Preloader from '../components/Preloader.astro';
   <div class="fade-out-layer" id="fade-layer"></div>
 
   <!-- NUESTRO CONTADOR MINIMALISTA -->
-  <div class="logo fixed">
-    <span class="dif" id="loading-counter" style="min-width: 4ch;">0%</span>
+  <div class="logo fixed" id="caja-blanca" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150px; height: 80px; background-color:var(--color-bg); z-index: 10; display: flex; justify-content: center; align-items: center; margin: 0; padding: 0;">
+    <span id="loading-counter">0% </span>
   </div>
-// secuencia
- 
+  // secuencia
 
-<!-- Contenedor del Loader con un ID limpio -->
+  <!-- Contenedor del Loader con un ID limpio -->
   <div id="loader-sequence-box">
-    
-    <video 
-      id="bg-video" 
-      src="/images/EstudioLarco.mp4" 
+    <video
+      id="bg-video"
+      src="/images/EstudioLarco.mp4"
       poster="/images/EstudioLarco-poster.webp"
-      autoplay loop muted playsinline
-      style="transform: scale(0.8); position: absolute; width: 100%; height: 100%; object-fit: cover;"
+      autoplay
+      loop
+      muted
+      playsinline
+      style="position: absolute; width: 100%; height: 100%; object-fit: cover;"
     ></video>
-    
-    <img 
-      id="scroll-image" 
-      src="/images/apple.webp" 
-      alt="Secuencia" 
-      style="position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0;" 
-    />
 
+    <img
+      id="scroll-image"
+      src="/images/apple.webp"
+      alt="Secuencia"
+      style="position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      z-index: -1;"
+    />
   </div>
 
   <div id="smooth-wrapper">
     <main id="smooth-content">
-      <Preloader /> 
+      <Preloader />
       <div style="height: 250vh; width: 100%;"></div>
     </main>
   </div>
@@ -65,20 +78,20 @@ import Preloader from '../components/Preloader.astro';
   </script>
 
   <script is:inline>
-    document.addEventListener('astro:page-load', () => {
+    document.addEventListener("astro:page-load", () => {
       // 1. ACTIVAMOS EL ESCUDO SOLO EN LA INTRO (Ruta '/')
-      if (window.location.pathname === '/') {
-        document.body.classList.add('is-intro');
+      if (window.location.pathname === "/") {
+        document.body.classList.add("is-intro");
         document.body.style.pointerEvents = "none";
       } else {
         // Si por alguna razón el usuario ya está en otra página, apagamos el escudo
-        document.body.classList.remove('is-intro');
+        document.body.classList.remove("is-intro");
         return;
       }
 
       setTimeout(() => {
-        const gsap = window.gsap || window['gsap'];
-        
+        const gsap = window.gsap || window["gsap"];
+
         if (!gsap) {
           window.location.href = "/home";
           return;
@@ -86,28 +99,30 @@ import Preloader from '../components/Preloader.astro';
 
         let maxScroll = 0;
         if (window.miSmoother) {
-            maxScroll = window.miSmoother.content().offsetHeight - window.innerHeight;
+          maxScroll =
+            window.miSmoother.content().offsetHeight - window.innerHeight;
         } else {
-            maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+          maxScroll =
+            document.documentElement.scrollHeight - window.innerHeight;
         }
 
         if (maxScroll < 500) maxScroll = 2500;
 
         const targetObj = window.miSmoother ? window.miSmoother : window;
         const scrollProp = window.miSmoother ? "scrollTop" : "scrollTo";
-        const duration = 5.5; 
+        const duration = 5.5;
 
         const counterElement = document.getElementById("loading-counter");
         const counterObj = { value: 0 };
 
         if (counterElement) {
           gsap.to(counterObj, {
-            value: 100, 
-            duration: duration, 
-            ease: "power2.inOut", 
-            onUpdate: function() {
+            value: 100,
+            duration: duration,
+            ease: "power2.inOut",
+            onUpdate: function () {
               counterElement.innerText = Math.round(counterObj.value) + "%";
-            }
+            },
           });
         }
 
@@ -116,20 +131,32 @@ import Preloader from '../components/Preloader.astro';
           duration: duration,
           ease: "power2.inOut",
           onComplete: () => {
-            gsap.to("#fade-layer", {
-              opacity: 1,
-              duration: 0.4,
-              ease: "power2.inOut",
+            
+            // MAGIA DE LA CAJA BLANCA
+            gsap.to("#caja-blanca", {
+              width: "100%",       // Usamos 100% en lugar de vw
+              height: "100%",      // Usamos 100% en lugar de vh
+              duration: 1.2,
+              ease: "expo.inOut",
               onComplete: () => {
-                // 2. APAGAMOS EL ESCUDO JUSTO ANTES DE IR A /HOME
-                document.body.classList.remove('is-intro');
-                window.location.href = "/home";
+                
+                // Ahora sí, el fade out general y cambio de ruta
+                gsap.to("#fade-layer", {
+                  opacity: 1,
+                  duration: 0.4,
+                  ease: "power2.inOut",
+                  onComplete: () => {
+                    document.body.classList.remove("is-intro");
+                    window.location.href = "/home";
+                  },
+                });
+                
               }
             });
-          }
+
+          },
         });
-      }, 300); 
+      }, 300);
     });
   </script>
-
 </Layout>

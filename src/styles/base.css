@@ -266,6 +266,8 @@ a:focus-visible, button:focus-visible {
 
 /* --- ESTILOS DEL LOADER DE FONDO --- */
 
+/* --- ESTILOS DEL LOADER DE FONDO --- */
+
 /* 1. Escritorio: Pantalla completa normal */
 #loader-sequence-box {
   position: fixed;
@@ -290,7 +292,33 @@ a:focus-visible, button:focus-visible {
     transform: translate(-50%, -50%);
     
     /* Ajusta estos dos valores para que la caja mida EXACTAMENTE lo mismo que la de tus clientes */
-    width: 85%;   /* Deja márgenes a los lados */
-    height: 65vh; /* Deja márgenes arriba y abajo */
+    width: 100%;   /* Deja márgenes a los lados */
+    height: 100vh; /* Deja márgenes arriba y abajo */
   }
+}
+
+
+/* Forzar que tanto video como fotos del loader llenen el 100% de la pantalla */
+#loader-sequence-box video,
+#loader-sequence-box img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100vh !important;
+  object-fit: cover !important;
+  object-position: center;
+}
+
+
+
+
+
+/* Ocultar el menú durante el preloader */
+body.is-intro header,
+body.is-intro nav,
+body.is-intro .main-nav{ /* Cambia estas clases por la que use tu menú */
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
