@@ -176,7 +176,7 @@ a:focus-visible, button:focus-visible {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 85%;
+  width: 95%;
   height: 80%;
   z-index: 0;
   pointer-events: none;
@@ -211,7 +211,7 @@ a:focus-visible, button:focus-visible {
   flex-wrap: wrap;
   align-items: end;
   justify-content: flex-end;
-  gap: .75rem;
+  gap: .4rem;
   /*mix-blend-mode: difference;*/
   z-index: 2;
   
@@ -232,6 +232,7 @@ a:focus-visible, button:focus-visible {
   font-family: 'lores-12', sans-serif;
   font-weight: 400;
   margin-right: 2rem;
+  padding-right: 30px;
 }
 
 /* --- TRANSICIONES DE PÁGINA (Layout.astro) --- */
@@ -310,6 +311,30 @@ a:focus-visible, button:focus-visible {
     width: 100%;   /* Deja márgenes a los lados */
     height: 100vh; /* Deja márgenes arriba y abajo */
   }
+
+  .clients-preview {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  height: 80%;
+  z-index: 0;
+  pointer-events: none;
+  filter: grayscale(100%) brightness(50%); /* Escala de grises total */
+
+  .text-clientes {
+  
+  font-family: 'lores-12', sans-serif;
+  font-weight: 400;
+  margin-right: 2rem;
+  padding-right: 15px;
+}
+
+}
+
+
+  
 }
 
 

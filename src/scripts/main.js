@@ -11,6 +11,8 @@ function initAnimations() {
 
     if (!gsap || !ScrollSmoother) return;
 
+
+    
     // 1. SMOOTHER (Scroll Suave)
     try {
         const wrapperEl = document.getElementById('smooth-wrapper');
@@ -255,11 +257,33 @@ function initAnimations() {
         });
     }
 
+
+ // 8. ANIMACIÓN DE TEXTO CLIENTES (Aparición en cascada)
+    function initTextClientes() {
+        // Seleccionamos los elementos. 
+        // Nota: Si ".text-clientes" es el contenedor padre, usa ".text-clientes > *"
+        // Si ".text-clientes" es la clase que tiene CADA texto, déjalo como ".text-clientes"
+        const elementos = document.querySelectorAll(".text-clientes"); 
+
+        if (elementos.length > 0) {
+            gsap.from(elementos, {
+                y: 40,               
+                opacity: 0,          
+                duration: 1.2,       
+                ease: "power3.out",  
+                delay: 2.5,          // Espera a que termine el preloader
+                stagger: 0.2         // 🌟 LA MAGIA: 0.2 segundos de diferencia entre cada elemento
+            });
+        }
+    }
+
+
     // EJECUCIÓN (¡Todo encendido!)
-    safeRun(initImageSequence); // <-- Encendido para que vuelva a funcionar el scroll
+    safeRun(initImageSequence); 
     safeRun(initFlips);
     safeRun(initScramble);
     safeRun(initClientsHover);
+    safeRun(initTextClientes); // <-- ¡AQUÍ ESTÁ TU NUEVA ANIMACIÓN!
 
     const handleResize = () => { ScrollTrigger.refresh(true); safeRun(initFlips); };
     window.addEventListener('resize', handleResize);
