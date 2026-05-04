@@ -1,17 +1,21 @@
-<nav class="main-nav" transition:persist>
-  <!-- Columna 1: Logo -->
-<div class="col ">      
-    <!-- Añadir data-astro-reload fuerza a limpiar la memoria al volver al Home -->
-    <a class="el" href="/home" data-astro-reload>No Brand Studio</a>
-    <div class="typing-indicator" data-scramble-duration="0"> &nbsp;█</div>
-  </div>
-  <!-- Columna 2: Enlaces -->
-  <div class="col links">
-    <a href="/studio" class="el reveal-text">Studio</a>
-    <a href="/work" class="el reveal-text">Work</a>
-  </div>
-  <!-- Columna 3: Info extra -->
- 
+<nav class="row main-nav" transition:persist>
+
+    <!-- Columna 1: Logo -->
+    <div class="col">
+      <!-- Añadir data-astro-reload fuerza a limpiar la memoria al volver al Home -->
+      <a class="el" href="/home" data-astro-reload>No Brand Studio</a>
+      <div class="typing-indicator" data-scramble-duration="0">&nbsp;█</div>
+    </div>
+    <!-- Columna 2: Enlaces -->
+    <div class="col links">
+      <a href="/studio" class="el">Studio</a>
+      <a href="/work" class="el">Work</a>
+    </div>
+    <!-- Columna 3: Info extra -->
+    <div class="col info">
+      <p class="el">Santiago de Chile</p>
+    </div>
+  
 </nav>
 
 <style>
@@ -21,24 +25,25 @@
     left: 0;
     width: 100%;
     padding: 2rem;
+    margin: 1rem 1rem;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
-    justify-content:top;
+    justify-content: top;
     z-index: 50;
   }
   .col {
     display: flex;
   }
   .col.links {
-     
-    justify-content:right;
+    justify-content: center;
     gap: 2rem;
   }
   .col.info {
     justify-content: flex-end;
   }
-  a, p {
+  a,
+  p {
     color: var(--color-link);
     text-decoration: none;
     font-size: 1rem;
@@ -47,4 +52,24 @@
   a:hover {
     opacity: 0.7;
   }
+  /* VERSIÓN MÓVIL */
+  @media (max-width: 768px) {
+    .main-nav {
+      /* Cambiamos a 2 columnas: la izquierda toma el espacio restante, la derecha se ajusta al contenido */
+      grid-template-columns: 1fr auto; 
+    }
+    
+    .col.links {
+      /* Empujamos los enlaces hacia la derecha */
+      justify-content: flex-end;
+      gap: 1.5rem; /* Ajuste opcional para que no estén tan separados en móvil */
+    }
+
+    .col.info {
+      /* Ocultamos "Santiago de Chile" */
+      display: none;
+    }
+  }
+
+
 </style>

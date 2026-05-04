@@ -25,28 +25,45 @@ function initAnimations() {
         }
     } catch(e) { console.error(e); }
 
-    // 2. MOTOR DE TEXTOS ANIMADOS (Para Studio, Work, etc.)
+// 2. MOTOR DE TEXTOS ANIMADOS (Modo Diagnóstico)
     function initGlobalTextReveal() {
-        try {
-            const revealElements = document.querySelectorAll(".reveal-text");
-            if (revealElements.length === 0) return;
+        const revealElements = document.querySelectorAll(".reveal-text");
+        if (revealElements.length === 0) return;
 
-            const SplitText = window.SplitText || window['SplitText'];
-            if (!SplitText) return;
+        const SplitText = window.SplitText || window['SplitText'];
+        if (!SplitText) return;
 
-            revealElements.forEach((el) => {
-                const split = new SplitText(el, { type: "lines", linesClass: "line", mask: "lines" });
-                gsap.set(split.lines, { y: "110%" });
-                ScrollTrigger.create({
+        revealElements.forEach((el) => {
+            
+            // 1. LIMPIEZA ASTRO: Revertimos textos cortados previamente en caché
+            if (el.split) el.split.revert();
+            if (el.mask) el.mask.revert();
+            
+            // 2. Destruimos estilos en línea congelados (opacity 0, transform, etc.)
+            gsap.set(el, { clearProps: "all" });
+
+            // 3. DOBLE SPLIT OFICIAL (Enmascarado puro con código)
+            // El texto real que sube
+            el.split = new SplitText(el, { type: "lines", linesClass: "split-child" });
+            // La máscara (Mantiene tu clase "line" para respetar tu CSS)
+            el.mask = new SplitText(el, { type: "lines", linesClass: "line" }); 
+            
+            // Aplicamos la guillotina invisible
+            gsap.set(el.mask.lines, { overflow: "hidden" });
+            
+            // 4. ANIMACIÓN (gsap.from es a prueba de balas contra re-renderizados)
+            gsap.from(el.split.lines, {
+                yPercent: 120, // Usar porcentajes evita errores de medida de fuente
+                duration: 1.2,
+                stagger: 0.1,
+                ease: "power4.out",
+                scrollTrigger: {
                     trigger: el,
-                    start: "top 85%", 
-                    onEnter: () => gsap.to(split.lines, { y: "0%", duration: 1.2, stagger: 0.1, ease: "power4.out", delay: 0.5 })
-                });
+                    start: "top 85%"
+                }
             });
-            setTimeout(() => ScrollTrigger.refresh(), 150);
-        } catch(e) { console.error(e); }
+        });
     }
-
     initGlobalTextReveal();
 
     // 3. REFERENCIAS GLOBALES
@@ -249,11 +266,19 @@ function initAnimations() {
     window._homeResizeHandler = handleResize; 
 }
 
-// CONEXIÓN CON ASTRO (Aquí registramos todos los plugins para revivir el Flip)
+// CONEXIÓN MAESTRA CON ASTRO
 document.addEventListener('astro:page-load', () => {
+    
+    // 1. Bloqueamos el scroll fantasma del navegador
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
     const gsap = window.gsap || window['gsap'];
     if (!gsap) return;
-    
+
+    // 2. Registramos TODOS tus plugins originales
     gsap.registerPlugin(
         window.ScrollTrigger, 
         window.ScrollSmoother, 
@@ -263,8 +288,21 @@ document.addEventListener('astro:page-load', () => {
         window.ScrambleTextPlugin
     );
 
-    ctx = gsap.context(() => { initAnimations(); });
+    // 3. LIMPIEZA PROFUNDA (Vital para que Astro no duplique animaciones)
+    ScrollTrigger.getAll().forEach(t => t.kill());
+
+    // 4. CREAMOS EL CONTEXTO RESTAURADO
+    let ctx = gsap.context(() => { 
+        
+        // ¡Encendemos toda tu web de nuevo!
+        // Esta función contiene a tus clientes, tu smoother y todo lo demás.
+        if (typeof initAnimations === "function") {
+            initAnimations(); 
+        }
+
+    });
 });
+
 
 // LIMPIEZA AL CAMBIAR DE PÁGINA (Evita bugs de scroll y Astro View Transitions)
 document.addEventListener('click', (e) => {
