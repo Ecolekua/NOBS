@@ -118,28 +118,10 @@ import Layout from "../layouts/Layout.astro";
             typing-indicator"
             data-alt-pos="pos-3"
             data-scramble-duration="0"
-          ">
+            "
+          >
             █
           </div>
-        </div>
-
-        <div class="clients-list">
-          <!-- Ahora son enlaces <a> que apuntan a sus respectivas páginas -->
-          <a href="/proyectos/prada" class="client-name text-clientes"
-            ><h1>Labs.</h1></a
-          >
-          <a href="/proyectos/EstudioLarco" class="client-name text-clientes"
-            ><h1>Estudio Larco</h1></a
-          >
-          <a href="/proyectos/bmw" class="client-name text-clientes"
-            ><h1>Heel</h1></a
-          >
-          <a href="/proyectos/bottega" class="client-name text-clientes"
-            ><h1>Serres</h1></a
-          >
-          <a href="/proyectos/microsoft" class="client-name text-clientes"
-            ><h1>Procolor</h1></a
-          >
         </div>
 
         <div class="clients-preview">
@@ -155,8 +137,32 @@ import Layout from "../layouts/Layout.astro";
             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; pointer-events: none;"
           ></video>
         </div>
-      </section>
 
+       
+        <div class="grid-4">
+          <a
+            href="/proyectos/prada"
+            class="meta-category client-name text-clientes"><h1>Labs.</h1></a
+          >
+          <a
+            href="/proyectos/EstudioLarco"
+            class="meta-category client-name text-clientes"
+            ><h1>Estudio Larco</h1></a
+          >
+          <a
+            href="/proyectos/bmw"
+            class="meta-category client-name text-clientes"><h1>Heel</h1></a
+          >
+          <a
+            href="/proyectos/bottega"
+            class="meta-category client-name text-clientes"><h1>Serres</h1></a
+          >
+          <a
+            href="/proyectos/microsoft"
+            class="meta-category client-name text-clientes"><h1>Procolor</h1></a
+          >
+        </div>
+      </section>
       <footer>
         <p>Experiment 626</p>
         <p>&nbsp; &nbsp;</p>
@@ -202,6 +208,168 @@ import Layout from "../layouts/Layout.astro";
   .clients {
     position: relative;
     z-index: 10;
+  }
+</style>
+<style>
+  /* VARIABLES GLOBALES (Para mantener la consistencia) */
+  :root {
+    --color-bg-dark: #ebe9e5;
+    --color-text-main: #0a0a0a;
+    --color-text-muted: #4a4a4a;
+    --border-subtle: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .interior-page {
+    background-color: var(--color-bg);
+    color: var(--color-text-muted);
+    padding: 8rem 4rem; /* Aire a los bordes de la pantalla */
+    /* Reemplaza con tu tipografía */
+  }
+
+  /* LA GRILLA MAESTRA DE 4 COLUMNAS */
+  .grid-4 {
+    margin: auto;
+    margin-bottom: 50px;
+    width: 90%;
+    display: flex;
+    gap: 2rem;
+    justify-content: space-around;
+    align-items: baseline;
     
+  }
+
+  /* --- 1. CABECERA PRINCIPAL --- */
+  .page-header {
+    margin-bottom: 8rem; /* Separación masiva típica editorial */
+  }
+
+  .main-headline {
+    grid-column: 3 / -1; /* Ocupa desde la 3ra columna hasta el final */
+    font-size: clamp(2rem, 3.5vw, 4rem); /* Texto fluido */
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  /* --- 2. ETIQUETAS DE SECCIÓN --- */
+  .section-labels {
+    margin-bottom: 4rem;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .label-date {
+    grid-column: 2 / 3;
+  }
+  .label-title {
+    grid-column: 3 / 4;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+    margin: 0;
+  }
+
+  /* --- 3. PROYECTO --- */
+  .project-item {
+    border-top: 1px solid var(--color-text-muted); /* La línea fina superior */
+    padding-top: 2rem;
+  }
+
+  .project-meta {
+    margin-bottom: 3rem;
+  }
+
+  .meta-year {
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .meta-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .meta-desc {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    grid-column: 3 / -1; /* Ocupa desde la 3ra columna hasta el final */
+    max-width: 90%; /* Evita que el texto llegue hasta el borde de su columna */
+  }
+
+  .meta-category {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: right; /* Alineado a la derecha como en el diseño */
+  }
+
+  /* LA IMAGEN HERO */
+  .project-image {
+    width: 100%;
+    border-radius: 20px; /* Bordes redondeados del diseño */
+    overflow: hidden;
+    background-color: #1a1a1a; /* Placeholder por si la imagen tarda */
+  }
+
+  .project-image img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9; /* Mantiene la proporción cinemática */
+    object-fit: cover;
+    display: block;
+  }
+
+  .project-image video {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9; /* Mantiene la proporción cinemática */
+    object-fit: cover;
+    display: block;
+  }
+
+  /* --- RESPONSIVE (Móviles) --- */
+  @media (max-width: 900px) {
+    .interior-page {
+      padding: 4rem 1.5rem;
+    }
+
+    /* Rompemos la grilla a 1 sola columna en móviles */
+    .grid-4 {
+      width: 80%;
+      display: grid;
+      margin-bottom: 6rem;
+      grid-template-columns:auto;   
+      justify-content: flex-start;
+      gap:0px; 
+      
+    }
+    
+
+
+    .meta-category {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin: 0;
+    
+  }
+
+    .main-headline {
+      grid-column: 1 / -1;
+    }
+    .label-date,
+    .label-title {
+      grid-column: 1 / -1;
+    }
+
+    .meta-category {
+      text-align: left;
+      margin-top: 1rem;
+    }
+
   }
 </style>
