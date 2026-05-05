@@ -69,7 +69,7 @@ a:focus-visible, button:focus-visible {
   white-space: nowrap;
   filter: blur(0px);
   text-transform: uppercase;
-  opacity: 0.6;
+  
 }
 
 .el--xl {
