@@ -9,8 +9,8 @@ html, body {
 
 :root {
   font-size: 13px;
-  --color-bg:  #0a0a0a;
-  --color-text:#ebe9e5 ;
+  --color-bg:  #ebe9e5;
+  --color-text:#0a0a0a ;
   --color-link: #f11d1d;
   --color-link-hover: #f93f06e7;
   --page-padding: 2rem;
@@ -225,6 +225,7 @@ a:focus-visible, button:focus-visible {
   z-index: 2;
   
   
+  
 
 }
 
@@ -242,6 +243,7 @@ a:focus-visible, button:focus-visible {
   font-weight: 400;
   margin-right: 2rem;
   padding-right: 30px;
+  color: var(--color-link-hover);
 }
 
 /* --- TRANSICIONES DE PÁGINA (Layout.astro) --- */

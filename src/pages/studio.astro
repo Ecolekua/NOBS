@@ -1,60 +1,62 @@
 ---
 // src/pages/work.astro
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Inicio - No Brand Studio">
-  
   <section class="interior-page">
-  
-  <!-- 1. CABECERA PRINCIPAL -->
-  <header class="page-header grid-4">
-    <!-- Dejamos la columna 1 y 2 vacías a propósito con CSS -->
-    <h1 class="main-headline reveal-text">
-      
-      
-      Productos digitales con propósito,<br>
-      diseño y experiencia  
-    </h1>
-  </header>
+    <!-- 1. CABECERA PRINCIPAL -->
+    <header class="page-header grid-4">
+      <!-- Dejamos la columna 1 y 2 vacías a propósito con CSS -->
+      <h1 class="main-headline reveal-text">
+        Productos digitales con propósito,<br />
+        diseño y experiencia
+      </h1>
+    </header>
 
-  <!-- 2. ETIQUETAS DE SECCIÓN -->
-  <div class="section-labels grid-4">
-    <!-- Columna 1 vacía -->
-    <div class="label-date col-2">
-      trabajando desde <br>
-      2018 - Now
+    <!-- 2. ETIQUETAS DE SECCIÓN -->
+    <div class="section-labels grid-4">
+      <!-- Columna 1 vacía -->
+      <div class="label-date col-2">
+        trabajando desde <br />
+        2018 - Now
+      </div>
+      <h2 class="label-title col-3 reveal-text">Santiago de Chile</h2>
+      <!-- Columna 4 vacía -->
     </div>
-    <h2 class="label-title col-3">Santiago de Chile</h2>
-    <!-- Columna 4 vacía -->
-  </div>
 
-  <!-- 3. PROYECTO (El listado y la imagen) -->
-  <article class="project-item">
-    <!-- Metadatos (Una caja por columna exacta) -->
-    <div class="project-meta grid-4">
-      <div class="meta-year">2026</div>
-      <h3 class="meta-title">Nosotros</h3>
-      <p class="meta-desc">
-      En No Brand Studio, entendemos que la creatividad no es solo una habilidad, sino una forma de pensar. Nacimos en Chile a partir de una convicción: diseñar con intención desafiando lo obvio y construyendo experiencias significativas. Somos un estudio multidisciplinario de diseño y tecnología, donde convergen diseño, estrategia y desarrollo para dar vida a productos centrados en la experiencia de usuario.
+    <!-- 3. PROYECTO (El listado y la imagen) -->
+    <article class="project-item">
+      <!-- Metadatos (Una caja por columna exacta) -->
+      <div class="project-meta grid-4 ">
+        <div class="meta-year reveal-text">2026</div>
+        <h3 class="meta-title reveal-text">Nosotros</h3>
+        <p class="meta-desc reveal-text">
+          En No Brand Studio, entendemos que la creatividad no es solo una
+          habilidad, sino una forma de pensar. Nacimos en Chile a partir de una
+          convicción: diseñar con intención desafiando lo obvio y construyendo
+          experiencias significativas. Somos un estudio multidisciplinario de
+          diseño y tecnología, donde convergen diseño, estrategia y desarrollo
+          para dar vida a productos centrados en la experiencia de usuario. Hoy,
+          colaboramos con clientes y equipos que buscan ir más allá de lo
+          convencional, desarrollando soluciones digitales, identidades y
+          productos que combinan funcionalidad, estética y propósito.
+        </p>
+      </div>
 
-Hoy, colaboramos con clientes y equipos que buscan ir más allá de lo convencional, desarrollando soluciones digitales, identidades y productos que combinan funcionalidad, estética y propósito.  
-      </p>
-      
-    </div>
-    
-    <!-- Imagen del proyecto -->
-    <div class="project-image">
-      
-       <img
-              src="/images/bottega.webp"
-              alt="Team at work in Nuvoro's creative space"
-            />
-
-    </div>
-  </article>
-
-</section>
+      <!-- Imagen del proyecto -->
+      <div class="project-image">
+        <video
+          id="studio-video"
+          src="/images/EstudioLarco.mp4"
+          poster="/images/EstudioLarco-poster.webp"
+          autoplay
+          loop
+          muted
+          playsinline></video>
+      </div>
+    </article>
+  </section>
 
   <script>
     import "../scripts/main.js";
@@ -65,125 +67,144 @@ Hoy, colaboramos con clientes y equipos que buscan ir más allá de lo convencio
      3. EL CSS MÁGICO PARA EL EFECTO DE FONDO
      ========================================== -->
 <style>
-
   /* VARIABLES GLOBALES (Para mantener la consistencia) */
-:root {
-  --color-bg-dark:#0a0a0a;
-  --color-text-main:  #ebe9e5 ;
-  --color-text-muted: #a0a0a0;
-  --border-subtle: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.interior-page {
-  background-color: var(--color-bg-dark);
-  color: var(--color-text-main);
-  padding: 8rem 4rem; /* Aire a los bordes de la pantalla */
-   /* Reemplaza con tu tipografía */
-}
-
-/* LA GRILLA MAESTRA DE 4 COLUMNAS */
-.grid-4 {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-  align-items: start;
-}
-
-/* --- 1. CABECERA PRINCIPAL --- */
-.page-header {
-  margin-bottom: 8rem; /* Separación masiva típica editorial */
-}
-
-.main-headline {
-  grid-column: 3 / -1; /* Ocupa desde la 3ra columna hasta el final */
-  font-size: clamp(2rem, 3.5vw, 4rem); /* Texto fluido */
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-
-/* --- 2. ETIQUETAS DE SECCIÓN --- */
-.section-labels {
-  margin-bottom: 4rem;
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-}
-
-.label-date { grid-column: 2 / 3; }
-.label-title { 
-  grid-column: 3 / 4; 
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--color-text-main);
-  margin: 0;
-}
-
-/* --- 3. PROYECTO --- */
-.project-item {
-  border-top: var(--border-subtle); /* La línea fina superior */
-  padding-top: 2rem;
-}
-
-.project-meta {
-  margin-bottom: 3rem;
-}
-
-.meta-year {
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.meta-title {
-  font-size: 1.75rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.meta-desc {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: var(--color-text-muted);
-  grid-column: 3 / -1; /* Ocupa desde la 3ra columna hasta el final */
-  max-width: 90%; /* Evita que el texto llegue hasta el borde de su columna */
-}
-
-.meta-category {
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  text-align: right; /* Alineado a la derecha como en el diseño */
-}
-
-/* LA IMAGEN HERO */
-.project-image {
-  width: 100%;
-  border-radius: 20px; /* Bordes redondeados del diseño */
-  overflow: hidden;
-  background-color: #1a1a1a; /* Placeholder por si la imagen tarda */
-}
-
-.project-image video {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 9; /* Mantiene la proporción cinemática */
-  object-fit: cover;
-  display: block;
-}
-
-/* --- RESPONSIVE (Móviles) --- */
-@media (max-width: 900px) {
-  .interior-page { padding: 4rem 1.5rem; }
-  
-  /* Rompemos la grilla a 1 sola columna en móviles */
-  .grid-4 { 
-    grid-template-columns: 1fr; 
-    gap: 1rem;
+  :root {
+    --color-bg-dark: #ebe9e5;
+    --color-text-main: #0a0a0a;
+    --color-text-muted: #4a4a4a;
+    --border-subtle: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
-  .main-headline { grid-column: 1 / -1; }
-  .label-date, .label-title { grid-column: 1 / -1; }
-  
-  .meta-category { text-align: left; margin-top: 1rem; }
-}
+
+  .interior-page {
+    background-color: var(--color-bg);
+    color: var(--color-text-muted);
+    padding: 8rem 4rem; /* Aire a los bordes de la pantalla */
+    /* Reemplaza con tu tipografía */
+  }
+
+  /* LA GRILLA MAESTRA DE 4 COLUMNAS */
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    align-items: start;
+  }
+
+  /* --- 1. CABECERA PRINCIPAL --- */
+  .page-header {
+    margin-bottom: 8rem; /* Separación masiva típica editorial */
+  }
+
+  .main-headline {
+    grid-column: 3 / -1; /* Ocupa desde la 3ra columna hasta el final */
+    font-size: clamp(2rem, 3.5vw, 4rem); /* Texto fluido */
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  /* --- 2. ETIQUETAS DE SECCIÓN --- */
+  .section-labels {
+    margin-bottom: 4rem;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+
+  .label-date {
+    grid-column: 2 / 3;
+  }
+  .label-title {
+    grid-column: 3 / 4;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+    margin: 0;
+  }
+
+  /* --- 3. PROYECTO --- */
+  .project-item {
+    border-top: 1px solid var(--color-text-muted); /* La línea fina superior */
+    padding-top: 2rem;
+  }
+
+  .project-meta {
+    margin-bottom: 3rem;
+  }
+
+  .meta-year {
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .meta-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .meta-desc {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    grid-column: 3 / -1; /* Ocupa desde la 3ra columna hasta el final */
+    max-width: 90%; /* Evita que el texto llegue hasta el borde de su columna */
+  }
+
+  .meta-category {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: right; /* Alineado a la derecha como en el diseño */
+  }
+
+  /* LA IMAGEN HERO */
+  .project-image {
+    width: 100%;
+    border-radius: 20px; /* Bordes redondeados del diseño */
+    overflow: hidden;
+    background-color: #1a1a1a; /* Placeholder por si la imagen tarda */
+  }
+
+  .project-image img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9; /* Mantiene la proporción cinemática */
+    object-fit: cover;
+    display: block;
+  }
+
+  .project-image video {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9; /* Mantiene la proporción cinemática */
+    object-fit: cover;
+    display: block;
+  }
+
+  /* --- RESPONSIVE (Móviles) --- */
+  @media (max-width: 900px) {
+    .interior-page {
+      padding: 4rem 1.5rem;
+    }
+
+    /* Rompemos la grilla a 1 sola columna en móviles */
+    .grid-4 {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .main-headline {
+      grid-column: 1 / -1;
+    }
+    .label-date,
+    .label-title {
+      grid-column: 1 / -1;
+    }
+
+    .meta-category {
+      text-align: left;
+      margin-top: 1rem;
+    }
+  }
 </style>

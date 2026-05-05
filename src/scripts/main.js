@@ -27,46 +27,54 @@ function initAnimations() {
         }
     } catch(e) { console.error(e); }
 
-// 2. MOTOR DE TEXTOS ANIMADOS (Modo Diagnóstico)
+
+// 2. MOTOR DE TEXTOS ANIMADOS (Sin guillotina, a prueba de colapsos)
     function initGlobalTextReveal() {
         const revealElements = document.querySelectorAll(".reveal-text");
+        
         if (revealElements.length === 0) return;
 
         const SplitText = window.SplitText || window['SplitText'];
-        if (!SplitText) return;
+        
+        // Si no tienes SplitText cargado en esta página, avisamos por consola
+        if (!SplitText) {
+            console.warn("⚠️ GSAP SplitText no está cargado en esta página.");
+            return;
+        }
 
         revealElements.forEach((el) => {
             
-            // 1. LIMPIEZA ASTRO: Revertimos textos cortados previamente en caché
+            // 1. Limpieza extrema
             if (el.split) el.split.revert();
             if (el.mask) el.mask.revert();
-            
-            // 2. Destruimos estilos en línea congelados (opacity 0, transform, etc.)
             gsap.set(el, { clearProps: "all" });
 
-            // 3. DOBLE SPLIT OFICIAL (Enmascarado puro con código)
-            // El texto real que sube
-            el.split = new SplitText(el, { type: "lines", linesClass: "split-child" });
-            // La máscara (Mantiene tu clase "line" para respetar tu CSS)
-            el.mask = new SplitText(el, { type: "lines", linesClass: "line" }); 
+            // 2. Split Simple (Sin máscara doble)
+            el.split = new SplitText(el, { type: "lines", linesClass: "split-line" });
             
-            // Aplicamos la guillotina invisible
-            gsap.set(el.mask.lines, { overflow: "hidden" });
-            
-            // 4. ANIMACIÓN (gsap.from es a prueba de balas contra re-renderizados)
-            gsap.from(el.split.lines, {
-                yPercent: 120, // Usar porcentajes evita errores de medida de fuente
-                duration: 1.2,
-                stagger: 0.1,
-                ease: "power4.out",
-                scrollTrigger: {
-                    trigger: el,
-                    start: "top 85%"
+            // 3. Animación limpia (y + opacity)
+            gsap.fromTo(el.split.lines, 
+                { 
+                    y: 60,      // Empieza 60px más abajo
+                    opacity: 0  // Empieza invisible
+                }, 
+                {
+                    y: 0,       // Sube a su posición original
+                    opacity: 1, // Aparece suavemente
+                    duration: 1.2,
+                    delay:.7,
+                    stagger: 0.1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: el,
+                        start: "top 95%", // Se activa sin importar qué tan arriba esté en la página
+                        toggleActions: "play none none none"
+                    }
                 }
-            });
+            );
         });
     }
-    initGlobalTextReveal();
+    
 
     // 3. REFERENCIAS GLOBALES
     const scrollMain = document.querySelector('.content');
@@ -278,16 +286,22 @@ function initAnimations() {
     }
 
 
-    // EJECUCIÓN (¡Todo encendido!)
+  // EJECUCIÓN (¡Todo encendido!)
+    safeRun(initGlobalTextReveal); // <-- ✅ 1. LO AGREGAMOS AQUÍ PRIMERO
     safeRun(initImageSequence); 
     safeRun(initFlips);
     safeRun(initScramble);
     safeRun(initClientsHover);
-    safeRun(initTextClientes); // <-- ¡AQUÍ ESTÁ TU NUEVA ANIMACIÓN!
+    safeRun(initTextClientes); 
+
+    // ✅ 2. LE DECIMOS A GSAP QUE RECALCULE TODA LA PÁGINA NUEVA
+    setTimeout(() => {
+        ScrollTrigger.refresh();
+    }, 100);
 
     const handleResize = () => { ScrollTrigger.refresh(true); safeRun(initFlips); };
     window.addEventListener('resize', handleResize);
-    window._homeResizeHandler = handleResize; 
+    window._homeResizeHandler = handleResize;
 }
 
 // CONEXIÓN MAESTRA CON ASTRO
